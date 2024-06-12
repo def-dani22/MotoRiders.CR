@@ -6,33 +6,125 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Agregar enlaces a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Enlace al archivo CSS personalizado -->
+    <link href="~/Content/Styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="~/Content/Imagenes/ima.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                    </ul>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+        </div>*@
+
+
+
+    <!-- Navbar de Bootstrap -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue sticky-top">
+        <div class="container">
+            <img src="~/Content/Imagenes/ima.png" class="inicio-icono" alt="Logo de la empresa">
+            <span class="logo-text">MotoRiders</span>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <div class="container">
+                    <input class="label-check" id="label-check" type="checkbox">
+                    <label for="label-check" class="hamburger-label">
+                        <div class="line1"></div>
+                        <div class="line2"></div>
+                        <div class="line3"></div>
+                    </label>
+                </div>
+            </button>
+
+
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        @*<a href="#" id="motosBtn" class="btn-link">Motos</a>*@
+                        @Html.ActionLink("Application name", "Index", "Producto", new { area = "" }, new { @class = "navbar-brand" })
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="cuadraciclosBtn" class="btn-link">Cuadraciclos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="motosElectricasBtn" class="btn-link">Motos Eléctricas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="repuestosBtn" class="btn-link">Repuestos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="tallerBtn" class="btn-link">Taller</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="contactoBtn" class="btn-link">Contacto</a>
+                    </li>
+                    <a href="#" id="cotizarBtn" class="btn btn-primary">Cotizar</a>
                 </ul>
             </div>
         </div>
-    </div>
+    </nav>
+
 
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+        @*<footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>*@
+
+
+
+
     </div>
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" style="color: white;">
+                    <h5>Contacto</h5>
+                    <p>Dirección: San Jose, San Pedro, frente Plaza San Pedro</p>
+                    <p>Teléfono: (506) 2211 8000</p>
+                    <p>Email: MridersCr@gmail.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Síguenos</h5>
+                    <a href="#" id="facebookBtn" class="btn btn-link">Facebook</a>
+                    <a href="#" id="twitterBtn" class="btn btn-link">Twitter</a>
+                    <a href="#" id="instagramBtn" class="btn btn-link">Instagram</a>
+                </div>
+                <div class="col-md-4" style="color: white;">
+                    <p>Mantente actualizado de nuestros eventos y promociones. Suscríbete!.</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Correo electrónico">
+                        </div>
+                        <button type="submit" class="btn btn-info btn-sm">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
