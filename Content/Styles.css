@@ -1,0 +1,671 @@
+﻿/* ------------------------------------ Click on login and Sign Up to  changue and view the effect
+---------------------------------------
+*/
+
+* {
+    margin: 0px auto;
+    padding: 0px;
+    text-align: center;
+    font-family: "Open Sans", sans-serif;
+}
+
+.cotn_principal {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    height: 100%;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#cfd8dc+0,607d8b+100,b0bec5+100 */
+    background: #cfd8dc; /* Old browsers */
+    background: -moz-linear-gradient( -45deg, #cfd8dc 0%, #607d8b 100%, #b0bec5 100% ); /* FF3.6-15 */
+    background: -webkit-linear-gradient( -45deg, #cfd8dc 0%, #607d8b 100%, #b0bec5 100% ); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient( 135deg, #cfd8dc 0%, #607d8b 100%, #b0bec5 100% ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfd8dc', endColorstr='#b0bec5',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.cont_centrar {
+    display: flex;
+    align-self: center;
+    width: 100%;
+}
+
+.cont_login {
+    position: relative;
+    width: 640px;
+}
+
+.cont_back_info {
+    position: relative;
+    float: left;
+    width: 640px;
+    height: 280px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 1px 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.cont_forms {
+    position: absolute;
+    overflow: hidden;
+    top: 0px;
+    left: 0px;
+    width: 320px;
+    height: 280px;
+    background-color: #eee;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cont_forms_active_login {
+    box-shadow: 1px 10px 30px -10px rgba(0, 0, 0, 0.5);
+    height: 420px;
+    top: -60px;
+    left: 0px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cont_forms_active_sign_up {
+    box-shadow: 1px 10px 30px -10px rgba(0, 0, 0, 0.5);
+    height: 420px;
+    top: -60px;
+    left: 320px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cont_img_back_grey {
+    position: absolute;
+    width: 950px;
+    top: -80px;
+    left: -116px;
+}
+
+    .cont_img_back_grey > img {
+        width: 100%;
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+        opacity: 0.2;
+        animation-name: animar_fondo;
+        animation-duration: 20s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+    }
+
+.cont_img_back_ {
+    position: absolute;
+    width: 950px;
+    top: -80px;
+    left: -116px;
+}
+
+    .cont_img_back_ > img {
+        width: 100%;
+        opacity: 0.3;
+        animation-name: animar_fondo;
+        animation-duration: 20s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+    }
+
+.cont_forms_active_login > .cont_img_back_ {
+    top: -20px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cont_forms_active_sign_up > .cont_img_back_ {
+    top: -20px;
+    left: -435px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cont_info_log_sign_up {
+    position: absolute;
+    width: 640px;
+    height: 280px;
+    top: 0px;
+    z-index: 1;
+}
+
+.col_md_login {
+    position: relative;
+    float: left;
+    width: 50%;
+}
+
+    .col_md_login > h2 {
+        font-weight: 400;
+        margin-top: 70px;
+        color: #757575;
+    }
+
+    .col_md_login > p {
+        font-weight: 400;
+        margin-top: 15px;
+        width: 80%;
+        color: #37474f;
+    }
+
+.btn_login {
+    background-color: #26c6da;
+    border: none;
+    padding: 10px;
+    width: 200px;
+    border-radius: 3px;
+    box-shadow: 1px 5px 20px -5px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.col_md_sign_up {
+    position: relative;
+    float: left;
+    width: 50%;
+}
+
+.cont_ba_opcitiy > h2 {
+    font-weight: 400;
+    color: #fff;
+}
+
+.cont_ba_opcitiy > p {
+    font-weight: 400;
+    margin-top: 15px;
+    color: #fff;
+}
+/* ----------------------------------
+background text    
+------------------------------------
+ */
+.cont_ba_opcitiy {
+    position: relative;
+    background-color: rgba(120, 144, 156, 0.55);
+    width: 80%;
+    border-radius: 3px;
+    margin-top: 60px;
+    padding: 15px 0px;
+}
+
+.btn_sign_up {
+    background-color: #ef5350;
+    border: none;
+    padding: 10px;
+    width: 200px;
+    border-radius: 3px;
+    box-shadow: 1px 5px 20px -5px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.cont_forms_active_sign_up {
+    z-index: 2;
+}
+
+@-webkit-keyframes animar_fondo {
+    from {
+        -webkit-transform: scale(1) translate(0px);
+        -moz-transform: scale(1) translate(0px);
+        -ms-transform: scale(1) translate(0px);
+        -o-transform: scale(1) translate(0px);
+        transform: scale(1) translate(0px);
+    }
+
+    to {
+        -webkit-transform: scale(1.5) translate(50px);
+        -moz-transform: scale(1.5) translate(50px);
+        -ms-transform: scale(1.5) translate(50px);
+        -o-transform: scale(1.5) translate(50px);
+        transform: scale(1.5) translate(50px);
+    }
+}
+
+@-o-keyframes identifier {
+    from {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+
+    to {
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        transform: scale(1.5);
+    }
+}
+
+@-moz-keyframes identifier {
+    from {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+
+    to {
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        transform: scale(1.5);
+    }
+}
+
+@keyframes identifier {
+    from {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+
+    to {
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        transform: scale(1.5);
+    }
+}
+
+.cont_form_login {
+    position: absolute;
+    opacity: 0;
+    display: none;
+    width: 320px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.cont_forms_active_login {
+    z-index: 2;
+}
+
+.cont_form_sign_up {
+    position: absolute;
+    width: 320px;
+    float: left;
+    opacity: 0;
+    display: none;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+    .cont_form_sign_up > input {
+        text-align: left;
+        padding: 15px 5px;
+        margin-left: 10px;
+        margin-top: 20px;
+        width: 260px;
+        border: none;
+        color: #757575;
+    }
+
+    .cont_form_sign_up > h2 {
+        margin-top: 50px;
+        font-weight: 400;
+        color: #757575;
+    }
+
+.cont_form_login > input {
+    padding: 15px 5px;
+    margin-left: 10px;
+    margin-top: 20px;
+    width: 260px;
+    border: none;
+    text-align: left;
+    color: #757575;
+}
+
+.cont_form_login > h2 {
+    margin-top: 110px;
+    font-weight: 400;
+    color: #757575;
+}
+
+.cont_form_login > a,
+.cont_form_sign_up > a {
+    color: #757575;
+    position: relative;
+    float: left;
+    margin: 10px;
+    margin-left: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Estilo personalizado para el fondo azul oscuro */
+.bg-dark-blue {
+    background-color: teal; /* Azul oscuro */
+}
+
+
+
+
+.navbar .nav-item .btn-link {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+}
+
+    .navbar .nav-item .btn-link:hover {
+        color: #cccccc;
+    }
+
+/* Estilo para el botón "Cotizar" */
+
+
+
+.container¨
+
+
+
+.navbar .nav-item .btn-link {
+    color: white;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.navbar .nav-item .btn-link:hover {
+    color: #0056b3;
+}
+
+/* Estilo para el botón "Cotizar" */
+
+
+.navbar .btn-primary {
+    font-size: 1.1rem;
+    background-color: steelblue;
+    border-color: steelblue;
+}
+
+}
+
+.navbar .btn-primary:hover {
+    background-color: steelblue;
+}
+
+/* Estilos para los elementos de la barra de navegación */
+.navbar-nav .nav-item {
+    margin-right: 30px; /* Espaciado entre elementos de navegación */
+}
+
+
+/* Estilos para los elementos de la barra de navegación */
+
+.label-check {
+    display: none;
+}
+
+.hamburger-label {
+    width: 35px;
+    height: 29px;
+    display: block;
+    cursor: pointer;
+    position: relative;
+}
+
+    .hamburger-label div {
+        width: 35px;
+        height: 3px;
+        background-color: #fff;
+        position: absolute;
+    }
+
+.line1 {
+    transition: all .3s;
+}
+
+.line2 {
+    margin: 7px 0 0 0;
+    transition: 0.3s;
+}
+
+.line3 {
+    margin: 14px 0 0 0;
+    transition: 0.3s;
+}
+
+#label-check:checked + .hamburger-label .line1 {
+    transform: rotate(35deg) scaleX(.55) translate(13px, -1px);
+    border-radius: 25px 25px 25px 0;
+}
+
+#label-check:checked + .hamburger-label .line3 {
+    transform: rotate(-35deg) scaleX(.55) translate(13px, 1px);
+    border-radius: 0 25px 25px 25px;
+}
+
+#label-check:checked + .hamburger-label .line2 {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    width: 17.5px;
+}
+
+
+
+
+
+
+
+/* Estilos para el logo en la barra de navegación */
+.inicio-icono {
+    width: 70px; /* Ancho del logo */
+    height: auto; /* Mantener la proporción original de la imagen */
+    margin-right: 10px; /* Espaciado a la derecha del logo */
+}
+
+
+#motosElectricasBtn {
+    color: #2bbd4b; /* Color de fondo de la barra de navegación */
+}
+
+
+
+.logo-text {
+    font-size: 35px; /* Tamaño de la fuente */
+    color: white; /* Color rojo */
+    font-family: 'Arial', sans-serif; /* Tipo de fuente (puedes cambiarlo según tus preferencias) */
+    font-weight: bold; /* Peso de la fuente (negrita) */
+    letter-spacing: 3px; /* Espaciado entre letras */
+}
+
+
+
+/* Estilos para el botón de cotizar */
+#cotizarBtn {
+    margin-left: 20px; /* Espaciado a la izquierda del botón de cotizar */
+}
+
+    /* Estilos para el botón de cotizar al pasar el mouse */
+    #cotizarBtn:hover {
+        background-color: #004080; /* Color de fondo al pasar el mouse */
+        border-color: #004080; /* Color del borde al pasar el mouse */
+    }
+
+
+
+/* Estilos para el footer */
+footer {
+    background-color: teal; /* Color de fondo del footer */
+    padding: 50px 0; /* Espaciado interno del footer */
+    color: #333; /* Color del texto en el footer */
+}
+
+    /* Estilos para las columnas dentro del footer */
+    footer .col-md-4 {
+        margin-bottom: 30px; /* Espaciado entre las columnas */
+    }
+
+    /* Estilos para los títulos en el footer */
+    footer h5 {
+        color: white; /* Color del título en el footer */
+    }
+
+    /* Estilos para los enlaces sociales en el footer */
+    footer a.btn-link {
+        color: white; /* Color del enlace */
+    }
+
+        footer a.btn-link:hover {
+            text-decoration: underline; /* Subrayado al pasar el mouse sobre el enlace */
+        }
+
+    /* Estilos para el formulario de suscripción en el footer */
+    footer form {
+        margin-top: 20px; /* Espaciado superior del formulario */
+    }
+
+    footer input.form-control {
+        margin-bottom: 10px; /* Espaciado inferior del campo de entrada de correo electrónico */
+    }
+
+    footer button.btn-info {
+        background-color: blue; /* Color de fondo del botón de suscripción */
+        border-color: white; /* Color del borde del botón de suscripción */
+    }
+
+        footer button.btn-info:hover {
+            background-color: darkblue; /* Color de fondo al pasar el mouse sobre el botón de suscripción */
+            border-color: white; /* Color del borde al pasar el mouse sobre el botón de suscripción */
+        }
+
+
+
+/* Agrega estilos personalizados aquí */
+
+/* Estilo para el contenedor del carrusel */
+.container {
+    margin-top: 20px;
+}
+
+/* Estilo para las imágenes dentro del carrusel */
+.carousel-inner img {
+    width: 100%;
+    height: auto;
+}
+
+/* Estilo para los controles del carrusel */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* Estilo para el texto descriptivo en las imágenes del carrusel (opcional) */
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+}
+
+
+
+/*--------------------------------------------------------------
+# Features
+--------------------------------------------------------------*/
+.features .card {
+    border: 0;
+    padding: 160px 20px 20px 20px;
+    position: relative;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.features .card-body {
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 30px;
+    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    transition: ease-in-out 0.4s;
+    border-radius: 5px;
+}
+
+.features .card-title {
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+    .features .card-title a {
+        color: #3c4133;
+    }
+
+.features .card-text {
+    color: #5e5e5e;
+}
+
+.features .read-more a {
+    color: #777777;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+    transition: 0.4s;
+}
+
+    .features .read-more a:hover {
+        text-decoration: underline;
+    }
+
+.features .card:hover .card-body {
+    background: #c04545;
+}
+
+.features .card:hover .read-more a,
+.features .card:hover .card-title,
+.features .card:hover .card-title a,
+.features .card:hover .card-text {
+    color: #fff;
+}
+
+
+
+
