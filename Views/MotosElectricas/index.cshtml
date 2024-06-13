@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "index";
+}
+
+<h2>Motos Eléctricas</h2>
+
+
+<div class="container">
+    <h1 class="text-center my-4">Listado de Motocicletas</h1>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@Url.Content(item.Img)" alt="@item.Nombre" class="card-img-top img-fluid">
+                    <div class="card-body">
+
+                        <h5 class="card-title">@item.Nombre</h5>
+                        <p class="card-text"><strong>Tipo:</strong> @item.Tipo</p>
+                        <p class="card-text"><strong>Modelo:</strong> @item.Modelo</p>
+                        <p class="card-text"><strong>Color:</strong> @item.Color</p>
+                        <p class="card-text"><strong>Descripción:</strong> @item.Descripcion</p>
+                        <p class="card-text"><strong>Características:</strong> @item.Caracteristicas</p>
+                        <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta</p>
+                        <label class="checkbox-container">
+                            <input type="checkbox" class="form-check-input" name="motocicleta" value="@item.Id">
+                            <span class="checkmark"></span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center mt-4">
+        <button type="button" class="btn btn-primary" id="comprarBtn">Comprar</button>
+        <button type="button" class="btn btn-primary" id="alqurarBtn">Alquilar</button>
+        <button type="button" class="btn btn-primary" id="cotizarwBtn">Cotizar</button>
+        <button type="button" class="btn btn-primary" id="pmanejoBtn">Solicitar prueba de manejo</button>
+    </div>
+</div>
+

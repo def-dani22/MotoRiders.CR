@@ -1,0 +1,31 @@
+﻿@model List<MotoRiders.CR.Models.Talleres>
+
+@{
+    ViewBag.Title = "Listado de Talleres";
+}
+
+<h2>Listado de Talleres</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Horarios</th>
+            <th>Teléfono</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var taller in Model)
+        {
+            <tr>
+                <td>@taller.Id</td>
+                <td>@taller.Nombre</td>
+                <td>@taller.Ubicacion</td>
+                <td>@taller.Horarios</td>
+                <td>@taller.Telefono</td>
+            </tr>
+        }
+    </tbody>
+</table>

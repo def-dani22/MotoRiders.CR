@@ -55,27 +55,32 @@
             </button>
 
 
-
+            @*El primero parametro es el nombre del boton, wel segundo el index de la carpeta de la vista del tercer parametro*@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
                         @*<a href="#" id="motosBtn" class="btn-link">Motos</a>*@
-                        @Html.ActionLink("Application name", "Index", "Producto", new { area = "" }, new { @class = "navbar-brand" })
+                        @Html.ActionLink("Motos", "Index", "Producto", new { area = "" }, new { @class = "btn-link" })
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="cuadraciclosBtn" class="btn-link">Cuadraciclos</a>
+                        @*<a href="#" id="cuadraciclosBtn" class="btn-link">Cuadraciclos</a>*@
+                        @Html.ActionLink("Cuadraciclos", "Index", "Cuadraciclo", new { area = "" }, new { @class = "btn-link" })
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="motosElectricasBtn" class="btn-link">Motos Eléctricas</a>
+                        @*<a href="#" id="motosElectricasBtn" class="btn-link">Motos Eléctricas</a>*@
+                        @Html.ActionLink("Motos Eléctricas", "Index", "MotosElectricas", new { area = "" }, new { @class = "btn-link" })
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="repuestosBtn" class="btn-link">Repuestos</a>
+                        @*<a href="#" id="repuestosBtn" class="btn-link">Repuestos</a>*@
+                        @Html.ActionLink("Repuestos", "Index", "Repuestos", new { area = "" }, new { @class = "btn-link" })
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="tallerBtn" class="btn-link">Taller</a>
+                        @*<a href="#" id="tallerBtn" class="btn-link">Taller</a>*@
+                        @Html.ActionLink("Taller", "Index", "Talleres", new { area = "" }, new { @class = "btn-link" })
                     </li>
                     <li class="nav-item">
-                        <a href="#" id="contactoBtn" class="btn-link">Contacto</a>
+                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                        @Html.ActionLink("Contacto", "Index", "Contacto", new { area = "" }, new { @class = "btn-link" })
                     </li>
                     <a href="#" id="cotizarBtn" class="btn btn-primary">Cotizar</a>
                 </ul>

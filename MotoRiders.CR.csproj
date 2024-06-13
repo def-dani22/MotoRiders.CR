@@ -88,17 +88,45 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Imagenes\ima.png" />
+    <Content Include="Content\Imagenes\imagc1.png" />
+    <Content Include="Content\Imagenes\imagc2.png" />
+    <Content Include="Content\Imagenes\imagc3.png" />
+    <Content Include="Content\Imagenes\imagc4.png" />
+    <Content Include="Content\Imagenes\imagc5.png" />
+    <Content Include="Content\Imagenes\imainfo.png" />
+    <Content Include="Content\Imagenes\imgc.png" />
+    <Content Include="Content\Imagenes\imgcar.png" />
+    <Content Include="Content\Imagenes\imgmis.png" />
+    <Content Include="Content\Imagenes\imgn1.png" />
+    <Content Include="Content\Imagenes\imgn2.png" />
+    <Content Include="Content\Imagenes\imgn3.png" />
+    <Content Include="Content\Imagenes\imgn5.png" />
+    <Content Include="Content\Imagenes\imgn6.png" />
+    <Content Include="Content\Imagenes\imgval.png" />
+    <Content Include="Content\Imagenes\imgvis.png" />
+    <Content Include="Content\Imagenes\motocross.png" />
+    <Content Include="Content\Script.js" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\Styles.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ContactoController.cs" />
+    <Compile Include="Controllers\CuadracicloController.cs" />
+    <Compile Include="Controllers\MotosElectricasController.cs" />
     <Compile Include="Controllers\ProductoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RepuestosController.cs" />
+    <Compile Include="Controllers\TalleresController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\Producto.cs" />
+    <Compile Include="Models\Talleres.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +136,11 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
     <Content Include="Views\Producto\index.cshtml" />
+    <Content Include="Views\Cuadraciclo\index.cshtml" />
+    <Content Include="Views\MotosElectricas\index.cshtml" />
+    <Content Include="Views\Repuestos\index.cshtml" />
+    <Content Include="Views\Talleres\index.cshtml" />
+    <Content Include="Views\Contacto\index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

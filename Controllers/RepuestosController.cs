@@ -4,25 +4,23 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Web.DynamicData;
 using System.Web.Mvc;
 
 namespace MotoRiders.CR.Controllers
 {
-    public class ProductoController : Controller
+    public class RepuestosController : Controller
     {
-
-
+        
         private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
 
-        // GET: Producto
+
+        // GET: Repuestos
         public ActionResult Index()
         {
-
             List<Producto> motos = new List<Producto>();
 
             // Consulta SQL para recuperar datos de la tabla Motos
-            string query = "SELECT * FROM Productos WHERE tipo = 'MOTO'";
+            string query = "SELECT * FROM Productos WHERE tipo = 'REPUESTOS'";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -52,8 +50,6 @@ namespace MotoRiders.CR.Controllers
 
             // Pasar los datos a la vista
             return View(motos);
-
         }
-
     }
 }

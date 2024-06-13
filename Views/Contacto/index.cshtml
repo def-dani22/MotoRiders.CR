@@ -1,0 +1,60 @@
+﻿@model List<MotoRiders.CR.Models.Contacto>
+
+@{
+    ViewBag.Title = "Lista de Contactos";
+}
+
+<h2>Sucursales</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Provincia</th>
+            <th>Teléfono</th>
+            <th>WhatsApp</th>
+            <th>Correo</th>
+            <th>Dirección</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contacto in Model.Take(7))
+        {
+            <tr>
+                <td>@contacto.Id</td>
+                <td>@contacto.Provincia</td>
+                <td>@contacto.Telefono</td>
+                <td>@contacto.Whatsapp</td>
+                <td>@contacto.Correo</td>
+                <td>@contacto.Direccion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Distribuidores</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Provincia</th>
+            <th>Teléfono</th>
+            <th>WhatsApp</th>
+            <th>Correo</th>
+            <th>Dirección</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var contacto in Model.Skip(7))
+        {
+            <tr>
+                <td>@contacto.Id</td>
+                <td>@contacto.Provincia</td>
+                <td>@contacto.Telefono</td>
+                <td>@contacto.Whatsapp</td>
+                <td>@contacto.Correo</td>
+                <td>@contacto.Direccion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
