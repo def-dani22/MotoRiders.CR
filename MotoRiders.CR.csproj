@@ -115,6 +115,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
+    <Compile Include="Controllers\CotizacionController.cs" />
     <Compile Include="Controllers\CuadracicloController.cs" />
     <Compile Include="Controllers\MotosElectricasController.cs" />
     <Compile Include="Controllers\ProductoController.cs" />
@@ -124,9 +125,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Contacto.cs" />
+    <Compile Include="Models\Cotizacion.cs" />
+    <Compile Include="Models\CotizacionViewModel.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\Talleres.cs" />
+    <Compile Include="Models\TipoCotizacion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +146,8 @@
     <Content Include="Views\Repuestos\index.cshtml" />
     <Content Include="Views\Talleres\index.cshtml" />
     <Content Include="Views\Contacto\index.cshtml" />
+    <Content Include="Views\Cotizacion\index.cshtml" />
+    <Content Include="Views\Cotizacion\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

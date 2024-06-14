@@ -1,0 +1,124 @@
+﻿@model MotoRiders.CR.Models.CotizacionViewModel
+
+@{
+    ViewBag.Title = "Crear Cotización";
+}
+
+<h2>Crear Cotización</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Cotización</h4>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdTipoCotizacion, "Tipo de Cotización", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.IdTipoCotizacion, Model.TiposCotizacion, "Seleccione un tipo de cotización", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.IdTipoCotizacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdProducto, "Producto", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.IdProducto, Model.Productos, "Seleccione un producto", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.IdProducto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EstadoCivil, "Estado Civil", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.EstadoCivil, GetEstadosCiviles(), "Seleccione un estado civil", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EstadoCivil, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoVivienda, "Tipo de Vivienda", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoVivienda, GetTiposVivienda(), "Seleccione un tipo de vivienda", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TipoVivienda, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TiempoDomicilio, "Tiempo en domicilio (años)", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TiempoDomicilio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TiempoDomicilio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmpresaTrabaja, "Empresa donde trabaja", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EmpresaTrabaja, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EmpresaTrabaja, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TiempoEmpresa, "Tiempo en la empresa (años)", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TiempoEmpresa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TiempoEmpresa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SalarioMensualAproximado, "Salario Mensual Aproximado", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SalarioMensualAproximado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SalarioMensualAproximado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumeroEmpresa, "Número de la empresa", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumeroEmpresa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumeroEmpresa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Crear" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+@functions {
+    private List<SelectListItem> GetEstadosCiviles()
+    {
+        return new List<SelectListItem>
+    {
+            new SelectListItem { Value = "Soltero(a)", Text = "Soltero(a)" },
+            new SelectListItem { Value = "Casado(a)", Text = "Casado(a)" },
+            new SelectListItem { Value = "Divorciado(a)", Text = "Divorciado(a)" },
+            new SelectListItem { Value = "Viudo(a)", Text = "Viudo(a)" },
+            new SelectListItem { Value = "Separado(a)", Text = "Separado(a)" }
+        };
+    }
+
+    private List<SelectListItem> GetTiposVivienda()
+    {
+        return new List<SelectListItem>
+    {
+            new SelectListItem { Value = "Casa unifamiliar", Text = "Casa unifamiliar" },
+            new SelectListItem { Value = "Apartamento", Text = "Apartamento" },
+            new SelectListItem { Value = "Dúplex y Triplex", Text = "Dúplex y Triplex" },
+            new SelectListItem { Value = "Adosado (Townhouse)", Text = "Adosado (Townhouse)" },
+            new SelectListItem { Value = "Piso (Flat)", Text = "Piso (Flat)" },
+            new SelectListItem { Value = "Casa adosada", Text = "Casa adosada" },
+            new SelectListItem { Value = "Casa móvil (Mobile Home)", Text = "Casa móvil (Mobile Home)" },
+            new SelectListItem { Value = "Casa de campo (Cottage)", Text = "Casa de campo (Cottage)" },
+            new SelectListItem { Value = "Casa de campo (Country House)", Text = "Casa de campo (Country House)" }
+        };
+    }
+}

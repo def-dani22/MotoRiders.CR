@@ -561,13 +561,13 @@ footer {
     }
 
     footer button.btn-info {
-        background-color: blue; /* Color de fondo del botón de suscripción */
-        border-color: white; /* Color del borde del botón de suscripción */
+        background-color: blue;  Color de fondo del botón de suscripción 
+        border-color: white;  Color del borde del botón de suscripción 
     }
 
         footer button.btn-info:hover {
-            background-color: darkblue; /* Color de fondo al pasar el mouse sobre el botón de suscripción */
-            border-color: white; /* Color del borde al pasar el mouse sobre el botón de suscripción */
+            background-color: darkblue;  Color de fondo al pasar el mouse sobre el botón de suscripción 
+            border-color: white;  Color del borde al pasar el mouse sobre el botón de suscripción 
         }
 
 
@@ -666,6 +666,121 @@ footer {
     color: #fff;
 }
 
+
+
+
+
+/*Boton de compras*/
+
+.buttonC {
+    --width: 120px;
+    --height: 55px;
+    --tooltip-height: 35px;
+    --tooltip-width: 90px;
+    --gap-between-tooltip-to-button: 18px;
+    --button-color: green;
+    --tooltip-color: #fff;
+    width: var(--width);
+    height: var(--height);
+    background: var(--button-color);
+    position: relative;
+    text-align: center;
+    border-radius: 0.45em;
+    font-family: "Arial";
+    transition: background 0.3s;
+}
+
+    .buttonC::before {
+        position: absolute;
+        content: attr(data-tooltip);
+        width: var(--tooltip-width);
+        height: var(--tooltip-height);
+        background-color: #555;
+        font-size: 0.9rem;
+        color: #fff;
+        border-radius: .25em;
+        line-height: var(--tooltip-height);
+        bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) + 10px);
+        left: calc(50% - var(--tooltip-width) / 2);
+    }
+
+    .buttonC::after {
+        position: absolute;
+        content: '';
+        width: 0;
+        height: 0;
+        border: 10px solid transparent;
+        border-top-color: #555;
+        left: calc(50% - 10px);
+        bottom: calc(100% + var(--gap-between-tooltip-to-button) - 10px);
+    }
+
+    .buttonC::after, .buttonC::before {
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.5s;
+    }
+
+.text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonC-wrapper, .text, .icon {
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    color: #fff;
+}
+
+.text {
+    top: 0
+}
+
+.text, .icon {
+    transition: top 0.5s;
+}
+
+.icon {
+    color: #fff;
+    top: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+.buttonC:hover {
+    background: #2bbd4b;
+}
+
+    .buttonC:hover .text {
+        top: -100%;
+    }
+
+    .buttonC:hover .icon {
+        top: 0;
+    }
+
+    .buttonC:hover:before, .buttonC:hover:after {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .buttonC:hover:after {
+        bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) - 20px);
+    }
+
+    .buttonC:hover:before {
+        bottom: calc(var(--height) + var(--gap-between-tooltip-to-button));
+    }
 
 
 
