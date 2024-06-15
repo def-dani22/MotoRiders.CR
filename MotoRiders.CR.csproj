@@ -130,6 +130,7 @@
     <Compile Include="Models\Cotizacion.cs" />
     <Compile Include="Models\CotizacionViewModel.cs" />
     <Compile Include="Models\Producto.cs" />
+    <Compile Include="Models\PruebaManejo.cs" />
     <Compile Include="Models\Talleres.cs" />
     <Compile Include="Models\TipoCotizacion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

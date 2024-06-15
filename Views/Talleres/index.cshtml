@@ -3,29 +3,37 @@
 @{
     ViewBag.Title = "Listado de Talleres";
 }
+<div class="container">
+    <h2>Talleres</h2>
+    <div class="table-responsive">
+        <table id="TablaT" class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Ubicación</th>
+                    <th>Horarios</th>
+                    <th>Teléfono</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var taller in Model)
+                {
+                    <tr class="table-row-odd">
+                        <td>@taller.Id</td>
+                        <td>@taller.Nombre</td>
+                        <td>@taller.Ubicacion</td>
+                        <td>@taller.Horarios</td>
+                        <td>@taller.Telefono</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
-<h2>Listado de Talleres</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Ubicación</th>
-            <th>Horarios</th>
-            <th>Teléfono</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var taller in Model)
-        {
-            <tr>
-                <td>@taller.Id</td>
-                <td>@taller.Nombre</td>
-                <td>@taller.Ubicacion</td>
-                <td>@taller.Horarios</td>
-                <td>@taller.Telefono</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Enlace al archivo JavaScript personalizado -->
+<script src="script.js"></script>

@@ -783,4 +783,398 @@ footer {
     }
 
 
+/*
+    estilos de las tarjetas de los productos*/
 
+
+/* Estilo global */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+/* Estilo del contenedor principal */
+.container {
+    margin-top: 20px;
+}
+
+/* Estilo de los títulos */
+h1, h2 {
+    color: #007bff;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* Estilo de las tarjetas */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+/* Estilo de las imágenes dentro de las tarjetas */
+.card-img-top {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+/* Estilo del cuerpo de las tarjetas */
+.card-body {
+    padding: 20px;
+    background: linear-gradient(135deg, #6e7f80, #8ca0a2);
+    color: #fff;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+/* Estilo de los títulos de las tarjetas */
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+}
+
+/* Estilo de los textos de las tarjetas */
+.card-text {
+    margin-bottom: 10px;
+}
+
+/* Estilo del checkbox */
+/* Customize the label (the checkbox-btn) */
+.checkbox-btn {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    /* Hide the browser's default checkbox */
+    .checkbox-btn input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .checkbox-btn label {
+        cursor: pointer;
+        font-size: 14px;
+    }
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border: 2.5px solid #ffffff;
+    transition: .2s linear;
+}
+
+.checkbox-btn input:checked ~ .checkmark {
+    background-color: transparent;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    left: 50%;
+    top: 40%;
+    width: 10px;
+    height: 14px;
+    border: 2px solid #0ea021;
+    filter: drop-shadow(0px 0px 10px #0ea021);
+    border-width: 0 2.5px 2.5px 0;
+    transition: .2s linear;
+    transform: translate(-50%, -50%) rotate(-90deg) scale(0.2);
+}
+
+/* Show the checkmark when checked */
+.checkbox-btn input:checked ~ .checkmark:after {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    animation: pulse 1s ease-in;
+}
+
+.checkbox-btn input:checked ~ .checkmark {
+    transform: rotate(45deg);
+    border: none;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1.6);
+    }
+}
+
+.select-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+
+[data-tooltip] {
+    position: relative;
+    cursor: pointer;
+}
+
+    [data-tooltip]:before,
+    [data-tooltip]:after {
+        text-transform: none;
+        font-size: 0.9rem;
+        line-height: 1;
+    }
+
+    [data-tooltip]:before {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 150%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 7px 10px;
+        border-radius: 5px;
+        background-color: #343a40;
+        color: #fff;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s, bottom 0.3s;
+    }
+
+    [data-tooltip]:after {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #343a40 transparent;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s, top 0.3s;
+    }
+
+    [data-tooltip]:hover:before,
+    [data-tooltip]:hover:after {
+        opacity: 1;
+        pointer-events: auto;
+        bottom: 125%;
+        top: -4px;
+    }
+
+/*
+    Boton Detalles*/
+/* Estilo del botón Detalles */
+.buttonD {
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: 15px;
+    background-color: steelblue;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+    .buttonD:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+
+
+/*
+    boton seleccionar*/
+
+
+
+.buttonS {
+    position: relative;
+    margin: 0;
+    margin-top: 10px; /* Margen superior para separar de otros elementos */
+    margin-right: 10px;
+    padding: 0.8em 1em;
+    outline: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    text-transform: uppercase;
+    background-color: steelblue;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 300;
+    font-size: 18px;
+    font-family: inherit;
+    z-index: 0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+}
+
+    .buttonS:hover {
+        animation: sh0 0.5s ease-in-out both;
+    }
+
+@keyframes sh0 {
+    0% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+
+    25% {
+        transform: rotate(7deg) translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: rotate(-7deg) translate3d(0, 0, 0);
+    }
+
+    75% {
+        transform: rotate(1deg) translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: rotate(0deg) translate3d(0, 0, 0);
+    }
+}
+
+.buttonS:hover span {
+    animation: storm 0.7s ease-in-out both;
+    animation-delay: 0.06s;
+}
+
+.buttonS::before,
+.buttonS::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0;
+    transition: transform 0.15s cubic-bezier(0.02, 0.01, 0.47, 1), opacity 0.15s cubic-bezier(0.02, 0.01, 0.47, 1);
+    z-index: -1;
+    transform: translate(100%, -25%) translate3d(0, 0, 0);
+}
+
+.buttonS:hover::before,
+.buttonS:hover::after {
+    opacity: 0.15;
+    transition: transform 0.2s cubic-bezier(0.02, 0.01, 0.47, 1), opacity 0.2s cubic-bezier(0.02, 0.01, 0.47, 1);
+}
+
+.buttonS:hover::before {
+    transform: translate3d(50%, 0, 0) scale(0.9);
+}
+
+.buttonS:hover::after {
+    transform: translate(50%, 0) scale(1.1);
+}
+
+
+/*estilos tablas*/
+
+/* Estilos para la tabla con ID TablaT */
+/* Estilos avanzados para la tabla con ID TablaT */
+
+#TablaT {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    #TablaT th,
+    #TablaT td {
+        text-align: center;
+        padding: 12px; /* Espaciado interno */
+        border: 1px solid #ddd; /* Borde delgado */
+    }
+
+    #TablaT th {
+        background-color: #0056b3; /* Color de fondo para encabezados */
+        color: white; /* Color de texto para encabezados */
+    }
+
+    #TablaT tbody tr:nth-child(even) {
+        background-color: white; /* Color de fondo para filas pares */
+    }
+
+    #TablaT tbody tr:nth-child(odd) {
+        background-color: steelblue; /* Color de fondo para filas impares */
+        color: white; /* Color de texto para filas impares */
+    }
+
+    #TablaT tbody tr:hover {
+        background-color: #f2f2f2; /* Cambio de color al pasar el mouse */
+    }
+/*
+
+    ESTILOS param LAS TABLAS de CONTACTO*/
+/* Estilos avanzados para las tablas de Sucursales y Distribuidores */
+
+#TablaSDSucursales, #TablaSDDistribuidores {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    #TablaSDSucursales th,
+    #TablaSDDistribuidores th,
+    #TablaSDSucursales td,
+    #TablaSDDistribuidores td {
+        text-align: center;
+        padding: 12px; /* Espaciado interno */
+        border: 1px solid #ddd; /* Borde delgado */
+    }
+
+    #TablaSDSucursales th,
+    #TablaSDDistribuidores th {
+        background-color: #0056b3; /* Color de fondo para encabezados */
+        color: white; /* Color de texto para encabezados */
+    }
+
+    #TablaSDSucursales tbody tr:nth-child(even),
+    #TablaSDDistribuidores tbody tr:nth-child(even) {
+        background-color: white; /* Color de fondo para filas pares */
+    }
+
+    #TablaSDSucursales tbody tr:nth-child(odd),
+    #TablaSDDistribuidores tbody tr:nth-child(odd) {
+        background-color: steelblue; /* Color de fondo para filas impares */
+        color: white; /* Color de texto para filas impares */
+    }
+
+    #TablaSDSucursales tbody tr:hover,
+    #TablaSDDistribuidores tbody tr:hover {
+        background-color: #f2f2f2; /* Cambio de color al pasar el mouse */
+    }

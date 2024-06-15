@@ -3,49 +3,100 @@
     ViewBag.Title = "index";
 }
 
-<h2>Cuadraciclos</h2>
 
+<h2>Productos</h2>
 
 <div class="container">
-    <h1 class="text-center my-4">Listado de Cuadraciclos</h1>
+    <h1 class="text-center my-4">Listado de Motocicletas</h1>
     <div class="row">
         @foreach (var item in Model)
         {
-            <div class="col-md-4 mb-4">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="card">
                     <img src="@Url.Content(item.Img)" alt="@item.Nombre" class="card-img-top img-fluid">
                     <div class="card-body">
-
                         <h5 class="card-title">@item.Nombre</h5>
                         <p class="card-text"><strong>Tipo:</strong> @item.Tipo</p>
                         <p class="card-text"><strong>Modelo:</strong> @item.Modelo</p>
                         <p class="card-text"><strong>Color:</strong> @item.Color</p>
                         <p class="card-text"><strong>Descripción:</strong> @item.Descripcion</p>
                         <p class="card-text"><strong>Características:</strong> @item.Caracteristicas</p>
-                        <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta</p>
-                        <label class="checkbox-container">
-                            <input type="checkbox" class="form-check-input" name="motocicleta" value="@item.Id">
-                            <span class="checkmark"></span>
-                        </label>
-
+                        <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta.ToString("C")</p>
+                        <button class="buttonD">Detalles</button>
+                        <div class="select-checkbox">
+                            <button class="buttonS" onclick="selectItem(this)">Seleccionar</button>
+                            <label class="checkbox-btn hidden">
+                                <input type="checkbox" class="form-check-input motocicleta" name="motocicleta" value="@item.Id">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
-
-
-    <div data-tooltip="Carrito" class="buttonC">
-        <div class="buttonC-wrapper">
-            <div class="text">Agregar al Carrito</div>
-            <span class="icon">
-                <svg viewBox="0 0 16 16" class="bi bi-cart2" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"></path>
-                </svg>
-            </span>
+    <div class="row justify-content-center">
+        <div data-tooltip="Agregado" class="buttonC">
+            <div class="buttonC-wrapper">
+                <div class="text">Agregar al Carrito</div>
+                <span class="icon">
+                    <svg viewBox="0 0 16 16" class="bi bi-cart2" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"></path>
+                    </svg>
+                </span>
+            </div>
         </div>
     </div>
-
-
 </div>
+<script>
+    // Función para seleccionar un ítem (ejemplo con checkboxes)
+    function selectItem(button) {
+        var cardBody = button.parentElement;
+        var checkbox = cardBody.querySelector('.form-check-input');
+        checkbox.checked = true;
+    }
 
+    // Función para desmarcar todos los checkboxes
+    function uncheckAllCheckboxes() {
+        var checkboxes = document.querySelectorAll('.form-check-input');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+        });
+    }
+
+    // Función para mostrar el tooltip de "Agregado al carrito" y luego restaurar el estado original
+    function showTooltip() {
+        var tooltip = document.querySelector('.buttonC');
+        tooltip.setAttribute('data-tooltip', 'Agregando al carrito');
+
+        // Simular un proceso de agregado al carrito con un delay
+        setTimeout(function () {
+            // Cambiar el tooltip después de agregar al carrito
+            tooltip.setAttribute('data-tooltip', 'Agregado al carrito');
+
+            // Restaurar el tooltip al estado original después de 3 segundos
+            setTimeout(function () {
+                tooltip.setAttribute('data-tooltip', 'Agregado');
+                tooltip.classList.remove('added'); // Remover clase de estilo de agregado si es necesario
+            }, 3000); // Quitar el tooltip después de 3 segundos
+
+            // Opcional: Aquí podrías agregar más lógica después de agregar al carrito
+            // Por ejemplo, redirigir a la página de carrito, actualizar la cantidad de elementos en el carrito, etc.
+        }, 1000); // Simular un tiempo de proceso (1 segundo)
+    }
+
+    // Event listener para el botón "Agregar al Carrito"
+    document.querySelector('.buttonC').addEventListener('click', function () {
+        // Llamar a la función para desmarcar todos los checkboxes
+        uncheckAllCheckboxes();
+
+        // Llamar a la función para mostrar el tooltip y simular el proceso de agregado
+        showTooltip();
+    });
+</script>
+
+<!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Enlace al archivo JavaScript personalizado -->
+<script src="script.js"></script>
