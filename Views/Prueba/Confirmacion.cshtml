@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Confirmación de Cotización";
+}
+
+<h2>Confirmación de Cotización</h2>
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<p>Gracias por enviar su cotización. Pronto uno de nuestros asesores se contactará con usted.</p>
+
+<div>
+    @Html.ActionLink("Volver al Inicio", "Index", "Home", new { }, new { @class = "btn btn-primary" })
+</div>

@@ -3,11 +3,8 @@
     ViewBag.Title = "index";
 }
 
-
-<h2>Productos</h2>
-
 <div class="container">
-    <h1 class="text-center my-4">Listado de Motocicletas</h1>
+    <h1 class="text-center my-4">Motos Eléctricas</h1>
     <div class="row">
         @foreach (var item in Model)
         {
@@ -16,11 +13,11 @@
                     <img src="@Url.Content(item.Img)" alt="@item.Nombre" class="card-img-top img-fluid">
                     <div class="card-body">
                         <h5 class="card-title">@item.Nombre</h5>
-                        <p class="card-text"><strong>Tipo:</strong> @item.Tipo</p>
+                        @*<p class="card-text"><strong>Tipo:</strong> @item.Tipo</p>*@
                         <p class="card-text"><strong>Modelo:</strong> @item.Modelo</p>
-                        <p class="card-text"><strong>Color:</strong> @item.Color</p>
+                        @*<p class="card-text"><strong>Color:</strong> @item.Color</p>
                         <p class="card-text"><strong>Descripción:</strong> @item.Descripcion</p>
-                        <p class="card-text"><strong>Características:</strong> @item.Caracteristicas</p>
+                        <p class="card-text"><strong>Características:</strong> @item.Caracteristicas</p>*@
                         <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta.ToString("C")</p>
                         <button class="buttonD">Detalles</button>
                         <div class="select-checkbox">

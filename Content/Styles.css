@@ -791,7 +791,7 @@ footer {
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f8f9fa;
-    color: #343a40;
+    color: #0056b3;
 }
 
 /* Estilo del contenedor principal */
@@ -801,8 +801,11 @@ body {
 
 /* Estilo de los títulos */
 h1, h2 {
-    color: #007bff;
+    color: #ddd;
     text-shadow: 1px 1px 2px #000;
+    background-color: #0094ff;
+    padding: 10px;
+    font-family: Arial, sans-serif; /* Tipo de fuente */
 }
 
 /* Estilo de las tarjetas */
@@ -826,8 +829,8 @@ h1, h2 {
 
 /* Estilo del cuerpo de las tarjetas */
 .card-body {
-    padding: 20px;
-    background: linear-gradient(135deg, #6e7f80, #8ca0a2);
+    padding: 90px;
+    background: linear-gradient(180deg,steelblue, #6e7f80);
     color: #fff;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -1177,4 +1180,60 @@ h1, h2 {
     #TablaSDSucursales tbody tr:hover,
     #TablaSDDistribuidores tbody tr:hover {
         background-color: #f2f2f2; /* Cambio de color al pasar el mouse */
+    }
+
+
+/*    estilo  login*/
+
+
+/* Estilos específicos para la vista de Inicio de Sesión */
+
+/* Estilo para el contenedor principal */
+.containerL {
+    margin-top: 20px;
+}
+
+/* Estilo para el formulario */
+.form-containerL {
+    margin: 0 auto; /* Centrar horizontalmente */
+    max-width: 400px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
+/* Estilo para los campos de formulario */
+.form-groupL {
+    margin-bottom: 20px;
+    
+    align-items: center;
+}
+
+/* Estilo para etiquetas */
+.control-labelL {
+    font-weight: bold;
+}
+
+/* Estilo para el botón de iniciar sesión */
+.btn-iniciarL {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+}
+
+    .btn-iniciarL:hover {
+        background-color: #218838;
+    }
+
+/* Estilo para el enlace de registro */
+.registro-linkL {
+    text-decoration: none;
+    color: #007bff;
+}
+
+    .registro-linkL:hover {
+        color: #0056b3;
     }

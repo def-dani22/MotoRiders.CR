@@ -1,0 +1,126 @@
+﻿@model MotoRiders.CR.Models.ClienteModel
+
+@{
+    ViewBag.Title = "Registro";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Agregar enlaces a Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Enlace al archivo CSS personalizado -->
+    <link href="~/Content/Styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+    <link href="~/Content/Imagenes/ima.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
+</head>
+<body>
+
+
+    <!-- Navbar de Bootstrap -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark-blue sticky-top">
+        <div class="container">
+            <img src="~/Content/Imagenes/ima.png" class="inicio-icono" alt="Logo de la empresa">
+            <span class="logo-text">MotoRiders</span>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2 class="text-center">Registro de Cliente</h2>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.cedula, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.cedula, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.cedula, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.direccion, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.direccion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.direccion, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.telefono, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.telefono, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.telefono, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.email, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.contraseña, htmlAttributes: new { @class = "control-label" })
+                        @Html.PasswordFor(model => model.contraseña, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.contraseña, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
+                    </div>
+                }
+
+                <div class="text-center">
+                    <p>¿Ya tienes una cuenta? <a href="@Url.Action("InicioSesion", "Cuenta")">Iniciar Sesión</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" style="color: white;">
+                    <h5>Contacto</h5>
+                    <p>Dirección: San Jose, San Pedro, frente Plaza San Pedro</p>
+                    <p>Teléfono: (506) 2211 8000</p>
+                    <p>Email: MridersCr@gmail.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Síguenos</h5>
+                    <a href="#" id="facebookBtn" class="btn btn-link">Facebook</a>
+                    <a href="#" id="twitterBtn" class="btn btn-link">Twitter</a>
+                    <a href="#" id="instagramBtn" class="btn btn-link">Instagram</a>
+                </div>
+                <div class="col-md-4" style="color: white;">
+                    <p>Mantente actualizado de nuestros eventos y promociones. Suscríbete!.</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Correo electrónico">
+                        </div>
+                        <button type="submit" class="btn btn-info btn-sm">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

@@ -116,16 +116,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
     <Compile Include="Controllers\CotizacionController.cs" />
+    <Compile Include="Controllers\CotizacionPersonalizadaController.cs" />
     <Compile Include="Controllers\CuadracicloController.cs" />
+    <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\MotosElectricasController.cs" />
     <Compile Include="Controllers\ProductoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PruebaController.cs" />
     <Compile Include="Controllers\RepuestosController.cs" />
     <Compile Include="Controllers\TalleresController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\ClienteModel.cs" />
     <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\Cotizacion.cs" />
     <Compile Include="Models\CotizacionViewModel.cs" />
@@ -149,6 +153,11 @@
     <Content Include="Views\Contacto\index.cshtml" />
     <Content Include="Views\Cotizacion\index.cshtml" />
     <Content Include="Views\Cotizacion\Create.cshtml" />
+    <Content Include="Views\Cuenta\InicioSesion.cshtml" />
+    <Content Include="Views\Cuenta\Registro.cshtml" />
+    <Content Include="Views\CotizacionPersonalizada\index.cshtml" />
+    <Content Include="Views\Prueba\Nueva.cshtml" />
+    <Content Include="Views\Prueba\Confirmacion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
