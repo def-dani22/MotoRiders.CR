@@ -88,6 +88,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Imagenes\c1.png" />
+    <Content Include="Content\Imagenes\c2.png" />
+    <Content Include="Content\Imagenes\c3.png" />
+    <Content Include="Content\Imagenes\c4.png" />
+    <Content Include="Content\Imagenes\c5.png" />
+    <Content Include="Content\Imagenes\c6.png" />
+    <Content Include="Content\Imagenes\c7.png" />
+    <Content Include="Content\Imagenes\c8.png" />
+    <Content Include="Content\Imagenes\e1.png" />
+    <Content Include="Content\Imagenes\e2.png" />
+    <Content Include="Content\Imagenes\e3.png" />
+    <Content Include="Content\Imagenes\e4.png" />
+    <Content Include="Content\Imagenes\e5.png" />
+    <Content Include="Content\Imagenes\e6.png" />
+    <Content Include="Content\Imagenes\e7.png" />
+    <Content Include="Content\Imagenes\HONDA.png" />
     <Content Include="Content\Imagenes\ima.png" />
     <Content Include="Content\Imagenes\imagc1.png" />
     <Content Include="Content\Imagenes\imagc2.png" />
@@ -105,7 +121,24 @@
     <Content Include="Content\Imagenes\imgn6.png" />
     <Content Include="Content\Imagenes\imgval.png" />
     <Content Include="Content\Imagenes\imgvis.png" />
+    <Content Include="Content\Imagenes\m1.png" />
+    <Content Include="Content\Imagenes\m2.png" />
+    <Content Include="Content\Imagenes\m3.png" />
+    <Content Include="Content\Imagenes\m4.png" />
+    <Content Include="Content\Imagenes\m5.png" />
+    <Content Include="Content\Imagenes\m6.png" />
+    <Content Include="Content\Imagenes\m7.png" />
+    <Content Include="Content\Imagenes\m8.png" />
+    <Content Include="Content\Imagenes\m9.png" />
     <Content Include="Content\Imagenes\motocross.png" />
+    <Content Include="Content\Imagenes\r1.png" />
+    <Content Include="Content\Imagenes\r2.png" />
+    <Content Include="Content\Imagenes\r3.png" />
+    <Content Include="Content\Imagenes\r4.png" />
+    <Content Include="Content\Imagenes\r5.png" />
+    <Content Include="Content\Imagenes\r6.png" />
+    <Content Include="Content\Imagenes\r7.png" />
+    <Content Include="Content\Imagenes\r8.png" />
     <Content Include="Content\Script.js" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\Styles.css" />
@@ -114,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CarritoCompraController.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
     <Compile Include="Controllers\CotizacionController.cs" />
     <Compile Include="Controllers\CotizacionPersonalizadaController.cs" />
@@ -128,12 +162,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CarritoCompra.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\ClienteModel.cs" />
     <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\Cotizacion.cs" />
     <Compile Include="Models\CotizacionViewModel.cs" />
     <Compile Include="Models\Producto.cs" />
+    <Compile Include="Models\ProductoCarrito.cs" />
     <Compile Include="Models\PruebaManejo.cs" />
     <Compile Include="Models\Talleres.cs" />
     <Compile Include="Models\TipoCotizacion.cs" />
@@ -158,6 +194,8 @@
     <Content Include="Views\CotizacionPersonalizada\index.cshtml" />
     <Content Include="Views\Prueba\Nueva.cshtml" />
     <Content Include="Views\Prueba\Confirmacion.cshtml" />
+    <Content Include="Views\CarritoCompra\index.cshtml" />
+    <Content Include="Views\Cuenta\MiPerfil.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

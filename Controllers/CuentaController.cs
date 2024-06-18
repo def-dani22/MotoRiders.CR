@@ -1,5 +1,4 @@
 ﻿using MotoRiders.CR.Models;
-using System;
 using System.Data.SqlClient;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -8,39 +7,32 @@ namespace MotoRiders.CR.Controllers
 {
     public class CuentaController : Controller
     {
-        // Cadena de conexión hacia tu base de datos
         private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
 
-        // GET: Cuenta/Registro
         public ActionResult Registro()
         {
             return View();
         }
 
-        // POST: Cuenta/Registro
         [HttpPost]
         public ActionResult Registro(ClienteModel cliente)
         {
             if (ModelState.IsValid)
             {
-                // Verificar si el email ya está registrado
                 if (EmailRegistrado(cliente.email))
                 {
                     ModelState.AddModelError("Email", "Este correo ya está registrado.");
                     return View(cliente);
                 }
 
-                // Guardar el cliente en la base de datos
                 InsertarCliente(cliente);
 
-                // Redirigir al usuario a la página de inicio de sesión
                 return RedirectToAction("InicioSesion", "Cuenta");
             }
 
             return View(cliente);
         }
 
-        // Método para verificar si el email ya está registrado
         private bool EmailRegistrado(string email)
         {
             string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email";
@@ -56,7 +48,6 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-        // Método para insertar un nuevo cliente en la base de datos
         private void InsertarCliente(ClienteModel cliente)
         {
             string query = "INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña) " +
@@ -78,30 +69,24 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-        // GET: Cuenta/InicioSesion
         public ActionResult InicioSesion()
         {
             return View();
         }
 
-        // POST: Cuenta/InicioSesion
         [HttpPost]
         public ActionResult InicioSesion(string email, string contraseña)
         {
-            // Verificar las credenciales del cliente
             if (VerificarCredenciales(email, contraseña))
             {
-                // Iniciar sesión exitosa
                 FormsAuthentication.SetAuthCookie(email, false);
-                return RedirectToAction("Index", "Home"); // Redirigir a la página principal después del inicio de sesión
+                return RedirectToAction("Index", "Home");
             }
 
-            // Credenciales incorrectas, mostrar mensaje de error
             ModelState.AddModelError("", "El email o la contraseña son incorrectos.");
             return View();
         }
 
-        // Método para verificar las credenciales del cliente
         private bool VerificarCredenciales(string email, string contraseña)
         {
             string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email AND contraseña = @Contraseña";
@@ -118,33 +103,61 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-        // Método para obtener el ID del cliente a partir del email almacenado en la sesión
-        private int ObtenerIdClienteDesdeSesion()
+        private ClienteModel ObtenerClienteDesdeSesion()
         {
-            string email = User.Identity.Name; // Obtener el email del usuario autenticado
-            string query = "SELECT Id FROM Clientes WHERE email = @Email";
+            if (!User.Identity.IsAuthenticated)
+            {
+                return null;
+            }
+
+            string email = User.Identity.Name;
+            string query = "SELECT idCliente, cedula, nombre, direccion, telefono FROM Clientes WHERE email = @Email";
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@Email", email);
                     connection.Open();
-                    object result = command.ExecuteScalar();
-                    if (result != null)
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        return Convert.ToInt32(result);
+                        if (reader.Read())
+                        {
+                            ClienteModel cliente = new ClienteModel();
+                            cliente.idCliente = (int)reader["idCliente"];
+                            cliente.cedula = reader["cedula"].ToString();
+                            cliente.nombre = reader["nombre"].ToString();
+                            cliente.direccion = reader["direccion"].ToString();
+                            cliente.telefono = reader["telefono"].ToString();
+                            return cliente;
+                        }
+                        return null;
                     }
-                    return -1; // En caso de no encontrar el cliente, podrías manejar este caso según tu lógica
                 }
             }
         }
 
-        // POST: Cuenta/CerrarSesion
+        public ActionResult MiPerfil()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("InicioSesion", "Cuenta");
+            }
+
+            ClienteModel cliente = ObtenerClienteDesdeSesion();
+            if (cliente != null)
+            {
+                return View(cliente);
+            }
+
+            return RedirectToAction("InicioSesion", "Cuenta");
+        }
+
         [HttpPost]
         public ActionResult CerrarSesion()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Inicio", "Home"); // Redirigir a la página de inicio después de cerrar sesión
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -82,8 +82,20 @@
                         @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
                         @Html.ActionLink("Contacto", "Index", "Contacto", new { area = "" }, new { @class = "btn-link" })
                     </li>
+                    <li class="nav-item">
+                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                        @Html.ActionLink("Carrito", "Index", "CarritoCompra", new { area = "" }, new { @class = "btn-link" })
+                    </li>
+                    <li class="nav-item">
+                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                        @Html.ActionLink("Perfil", "MiPerfil", "Cuenta", new { area = "" }, new { @class = "btn-link" })
+                    </li>
                     @*<a href="#" id="cotizarBtn" class="btn btn-primary">Cotizar</a>*@
                     @Html.ActionLink("Cotizar", "Nueva", "Prueba", new { }, new { @class = "btn btn-primary", id = "cotizarBtn" })
+
+                    <li><a href="@Url.Action("Index", "CarritoCompra")">Carrito</a></li>
+
+
                 </ul>
             </div>
         </div>

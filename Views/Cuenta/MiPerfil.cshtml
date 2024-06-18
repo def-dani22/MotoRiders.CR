@@ -1,0 +1,23 @@
+﻿@model MotoRiders.CR.Models.ClienteModel
+
+@{
+    ViewBag.Title = "MiPerfil";
+}
+
+
+@{
+    if (User.Identity.IsAuthenticated)
+    {
+        // Mostrar información del perfil aquí
+        <h2>Mi Perfil</h2>
+        <p>Cédula: @Model.cedula</p>
+        <p>Nombre: @Model.nombre</p>
+        <p>Dirección: @Model.direccion</p>
+        <p>Teléfono: @Model.telefono</p>
+    }
+    else
+    {
+        // Redirigir a la página de inicio de sesión si el usuario no está autenticado
+        Response.Redirect("~/Cuenta/InicioSesion");
+    }
+}

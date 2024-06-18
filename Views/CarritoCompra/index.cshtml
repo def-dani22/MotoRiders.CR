@@ -1,0 +1,50 @@
+﻿@model MotoRiders.CR.Models.CarritoCompra
+
+@{
+    ViewBag.Title = "Carrito de Compras";
+}
+
+<h2>Carrito de Compras</h2>
+
+@if (Model.ProductosCarrito.Count == 0)
+{
+    <p>No hay productos en el carrito.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ProductosCarrito)
+            {
+                <tr>
+                    <td>@item.Producto.Nombre</td>
+                    <td>@item.Cantidad</td>
+                    <td>@item.Producto.PrecioVenta.ToString("C")</td>
+                    <td>@(item.Cantidad * item.Producto.PrecioVenta).ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                <td>@Model.ProductosCarrito.Sum(p => p.Cantidad * p.Producto.PrecioVenta).ToString("C")</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <form asp-action="RealizarCompra" method="post">
+        <div class="form-group">
+            <label for="tarjeta">Número de Tarjeta:</label>
+            <input type="text" class="form-control" id="tarjeta" name="tarjeta" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Comprar</button>
+    </form>
+}
