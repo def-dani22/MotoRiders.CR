@@ -1,0 +1,70 @@
+﻿
+@model List<MotoRiders.CR.Models.Producto>
+
+@{
+    ViewBag.Title = "Carrito de Compras";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ajusta el nombre del layout según tu proyecto
+}
+
+<div class="container">
+    <h1 class="text-center my-4">Carrito de Compras</h1>
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Mensaje"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="row">
+            @foreach (var producto in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card">
+                        <img src="@Url.Content(producto.Img)" alt="@producto.Nombre" class="card-img-top img-fluid">
+                        <div class="card-body">
+                            <h5 class="card-title">@producto.Nombre</h5>
+                            <p class="card-text"><strong>Modelo:</strong> @producto.Modelo</p>
+                            <p class="card-text"><strong>Precio:</strong> @producto.PrecioVenta.ToString("C")</p>
+                            <button class="btn btn-danger" onclick="eliminarDelCarrito(@producto.Id)">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-auto">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Seguir Comprando</a>
+                <a href="#" class="btn btn-success">Procesar Pago</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info mt-4" role="alert">
+            Tu carrito de compras está vacío.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function eliminarDelCarrito(id) {
+            if (confirm("¿Estás seguro de eliminar este producto del carrito?")) {
+                window.location.href = "@Url.Action("EliminarDelCarrito", "Carrito")?id=" + id;
+            }
+        }
+    </script>
+}
+
+<!-- Enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Enlace al archivo JavaScript personalizado -->
+<script src="script.js"></script>

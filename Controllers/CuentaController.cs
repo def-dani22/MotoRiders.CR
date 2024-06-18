@@ -1,5 +1,7 @@
 ﻿using MotoRiders.CR.Models;
+using System;
 using System.Data.SqlClient;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -79,13 +81,32 @@ namespace MotoRiders.CR.Controllers
         {
             if (VerificarCredenciales(email, contraseña))
             {
-                FormsAuthentication.SetAuthCookie(email, false);
+                // Configurar el ticket de autenticación manualmente
+                FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                    1, // Versión del ticket
+                    email, // Nombre del usuario asociado al ticket
+                    DateTime.Now, // Fecha y hora de emisión
+                    DateTime.Now.AddMinutes(30), // Fecha y hora de expiración
+                    false, // Si la cookie debe ser persistente
+                    String.Empty, // Datos de usuario (puede ser una cadena con información adicional)
+                    FormsAuthentication.FormsCookiePath); // Ruta de la cookie
+
+                // Encriptar el ticket
+                string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+
+                // Crear la cookie
+                HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+                Response.Cookies.Add(authCookie);
+
+                TempData["Mensaje"] = "¡Inicio de sesión exitoso!";
                 return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "El email o la contraseña son incorrectos.");
             return View();
         }
+
+
 
         private bool VerificarCredenciales(string email, string contraseña)
         {
@@ -131,7 +152,7 @@ namespace MotoRiders.CR.Controllers
                             cliente.telefono = reader["telefono"].ToString();
                             return cliente;
                         }
-                        return null;
+                        return null; // Si no se encuentra el cliente
                     }
                 }
             }
@@ -150,8 +171,10 @@ namespace MotoRiders.CR.Controllers
                 return View(cliente);
             }
 
+            // Manejar el caso donde el cliente no se encontró
             return RedirectToAction("InicioSesion", "Cuenta");
         }
+
 
         [HttpPost]
         public ActionResult CerrarSesion()
@@ -159,5 +182,18 @@ namespace MotoRiders.CR.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

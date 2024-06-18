@@ -1,23 +1,48 @@
 ﻿@model MotoRiders.CR.Models.ClienteModel
 
 @{
-    ViewBag.Title = "MiPerfil";
+    ViewBag.Title = "Mi Perfil";
 }
 
+<h2>Mi Perfil</h2>
 
-@{
-    if (User.Identity.IsAuthenticated)
-    {
-        // Mostrar información del perfil aquí
-        <h2>Mi Perfil</h2>
-        <p>Cédula: @Model.cedula</p>
-        <p>Nombre: @Model.nombre</p>
-        <p>Dirección: @Model.direccion</p>
-        <p>Teléfono: @Model.telefono</p>
-    }
-    else
-    {
-        // Redirigir a la página de inicio de sesión si el usuario no está autenticado
-        Response.Redirect("~/Cuenta/InicioSesion");
-    }
-}
+<div>
+    <h3>@Model.nombre</h3>
+    <dl class="dl-horizontal">
+        <dt>
+            <strong>Cédula:</strong>
+        </dt>
+        <dd>
+            @Model.cedula
+        </dd>
+        <dt>
+            <strong>Dirección:</strong>
+        </dt>
+        <dd>
+            @Model.direccion
+        </dd>
+        <dt>
+            <strong>Teléfono:</strong>
+        </dt>
+        <dd>
+            @Model.telefono
+        </dd>
+        <dt>
+            <strong>Email:</strong>
+        </dt>
+        <dd>
+            @Model.email
+        </dd>
+    </dl>
+</div>
+
+<p>
+    <a href="@Url.Action("CerrarSesion", "Cuenta")" class="btn btn-primary">Cerrar Sesión</a>
+</p>
+
+
+<!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Enlace al archivo JavaScript personalizado -->
+<script src="script.js"></script>

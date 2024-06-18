@@ -148,6 +148,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CarritoCompraController.cs" />
+    <Compile Include="Controllers\CarritoController.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
     <Compile Include="Controllers\CotizacionController.cs" />
     <Compile Include="Controllers\CotizacionPersonalizadaController.cs" />
@@ -196,6 +197,7 @@
     <Content Include="Views\Prueba\Confirmacion.cshtml" />
     <Content Include="Views\CarritoCompra\index.cshtml" />
     <Content Include="Views\Cuenta\MiPerfil.cshtml" />
+    <Content Include="Views\Carrito\index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
