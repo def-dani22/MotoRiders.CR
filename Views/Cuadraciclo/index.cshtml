@@ -1,49 +1,37 @@
-﻿
+﻿@model List<MotoRiders.CR.Models.Producto>
+
 @{
-    ViewBag.Title = "index";
+    ViewBag.Title = "Index";
 }
 
 <div class="container">
     <h1 class="text-center my-4">Cuadraciclos</h1>
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="@Url.Content(item.Img)" alt="@item.Nombre" class="card-img-top img-fluid">
-                    <div class="card-body">
-                        <h5 class="card-title">@item.Nombre</h5>
-                        @*<p class="card-text"><strong>Tipo:</strong> @item.Tipo</p>*@
-                        <p class="card-text"><strong>Modelo:</strong> @item.Modelo</p>
-                        @*<p class="card-text"><strong>Color:</strong> @item.Color</p>
-                        <p class="card-text"><strong>Descripción:</strong> @item.Descripcion</p>
-                        <p class="card-text"><strong>Características:</strong> @item.Caracteristicas</p>*@
-                        <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta.ToString("C")</p>
-                        <button class="buttonD">Detalles</button>
-                        <div class="select-checkbox">
-                            <button class="buttonS" onclick="selectItem(this)">Seleccionar</button>
-                            <label class="checkbox-btn hidden">
-                                <input type="checkbox" class="form-check-input motocicleta" name="motocicleta" value="@item.Id">
-                                <span class="checkmark"></span>
-                            </label>
+    <form action="@Url.Action("AgregarProductosAlCarrito", "Producto")" method="post">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card">
+                        <img src="@Url.Content(item.Img)" alt="@item.Nombre" class="card-img-top img-fluid">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Nombre</h5>
+                            <p class="card-text"><strong>Modelo:</strong> @item.Modelo</p>
+                            <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta.ToString("C")</p>
+                            <div class="select-checkbox">
+                                <input type="checkbox" class="form-check-input motocicleta" name="productosSeleccionados" value="@item.Id">
+                                <label for="productosSeleccionados" class="form-check-label">Seleccionar</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-    <div class="row justify-content-center">
-        <div data-tooltip="Agregado" class="buttonC">
-            <div class="buttonC-wrapper">
-                <div class="text">Agregar al Carrito</div>
-                <span class="icon">
-                    <svg viewBox="0 0 16 16" class="bi bi-cart2" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"></path>
-                    </svg>
-                </span>
+            }
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 <script>
     // Función para seleccionar un ítem (ejemplo con checkboxes)

@@ -23,5 +23,6 @@ namespace MotoRiders.CR.Models
         public virtual Producto Producto { get; set; }
 
         public int Cantidad { get; set; }
+        
     }
 }

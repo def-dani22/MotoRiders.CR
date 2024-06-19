@@ -6,45 +6,98 @@
 
 <h2>Carrito de Compras</h2>
 
-@if (Model.ProductosCarrito.Count == 0)
+@if (Model.ProductosCarrito.Any())
 {
-    <p>No hay productos en el carrito.</p>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Modelo</th>
+                    <th>Color</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ProductosCarrito)
+                {
+                    <tr>
+                        <td>
+                            <img src="@item.Producto.Img" alt="@item.Producto.Nombre" class="img-thumbnail" style="max-width: 100px;" />
+                        </td>
+                        <td>@item.Producto.Nombre</td>
+                        <td>@item.Producto.Modelo</td>
+                        <td>@item.Producto.Color</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.Producto.PrecioVenta.ToString("C")</td>
+                        <td>@(item.Cantidad * item.Producto.PrecioVenta).ToString("C")</td>
+                        <td>
+                            @Html.ActionLink("Eliminar", "EliminarDelCarrito", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-right">
+        <h3>Total: @Model.ProductosCarrito.Sum(p => p.Cantidad * p.Producto.PrecioVenta).ToString("C")</h3>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        @* Formulario para realizar la compra *@
+                        @using (Html.BeginForm("RealizarCompra", "CarritoCompra", FormMethod.Post, new { @class = "needs-validation", id = "form-pago" }))
+                        {
+                            <h3 class="mb-4">Datos de Pago</h3>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NombreTarjeta, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.NombreTarjeta, new { @class = "form-control", required = "required" })
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NumeroTarjeta, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.NumeroTarjeta, new { @class = "form-control", required = "required" })
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FechaExpiracion, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.FechaExpiracion, new { @class = "form-control", required = "required" })
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CVV, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.CVV, new { @class = "form-control", required = "required" })
+                                <div class="invalid-feedback">Campo requerido.</div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.NumeroCuenta, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.NumeroCuenta, new { @class = "form-control" })
+                            </div>
+                            <button type="submit" class="btn btn-primary">Realizar Compra</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.ProductosCarrito)
-            {
-                <tr>
-                    <td>@item.Producto.Nombre</td>
-                    <td>@item.Cantidad</td>
-                    <td>@item.Producto.PrecioVenta.ToString("C")</td>
-                    <td>@(item.Cantidad * item.Producto.PrecioVenta).ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3" class="text-right"><strong>Total:</strong></td>
-                <td>@Model.ProductosCarrito.Sum(p => p.Cantidad * p.Producto.PrecioVenta).ToString("C")</td>
-            </tr>
-        </tfoot>
-    </table>
-
-    <form asp-action="RealizarCompra" method="post">
-        <div class="form-group">
-            <label for="tarjeta">Número de Tarjeta:</label>
-            <input type="text" class="form-control" id="tarjeta" name="tarjeta" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Comprar</button>
-    </form>
+    <p>No hay productos en el carrito.</p>
 }
+
+
+
+<!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Enlace al archivo JavaScript personalizado -->
+<script src="script.js"></script>
