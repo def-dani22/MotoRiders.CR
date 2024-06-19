@@ -67,6 +67,8 @@ namespace MotoRiders.CR.Controllers
         }
 
 
+
+
         [HttpPost]
         public ActionResult AgregarAlCarrito(int id)
         {
@@ -403,6 +405,32 @@ namespace MotoRiders.CR.Controllers
 
             return productosCarrito;
         }
+
+
+        public ActionResult EliminarDelCarrito(int id)
+        {
+            var clienteId = ObtenerIdClienteDesdeSesion();
+
+            // Query para eliminar el producto del carrito
+            string deleteQuery = $"DELETE FROM ProductoCarrito WHERE idProductoCarrito = @Id AND idOrden IN (SELECT idOrden FROM Orden WHERE idCliente = @ClienteId AND estadoOrden = 'creado')";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(deleteQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@ClienteId", clienteId);
+
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
+
 
         // Método para eliminar todos los productos del carrito de compras del cliente
         private void EliminarProductosDelCarrito(int clienteId)

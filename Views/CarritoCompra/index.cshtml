@@ -36,8 +36,9 @@
                         <td>@item.Producto.PrecioVenta.ToString("C")</td>
                         <td>@(item.Cantidad * item.Producto.PrecioVenta).ToString("C")</td>
                         <td>
-                            @Html.ActionLink("Eliminar", "EliminarDelCarrito", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+                            @Html.ActionLink("Eliminar", "EliminarDelCarrito", new { id = item.Id }, new { @class = "btn btn-danger" })
                         </td>
+
                     </tr>
                 }
             </tbody>
