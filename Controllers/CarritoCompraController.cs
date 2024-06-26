@@ -58,6 +58,7 @@ namespace MotoRiders.CR.Controllers
                 }
             }
 
+
             var carritoCompra = new CarritoCompra
             {
                 ProductosCarrito = productosCarrito
@@ -114,6 +115,11 @@ namespace MotoRiders.CR.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Confirmacion()
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            return View();
+        }
 
         [HttpPost]
         public ActionResult RealizarCompra(CarritoCompra carritoCompra)
@@ -145,7 +151,11 @@ namespace MotoRiders.CR.Controllers
             // Eliminar los productos del carrito después de realizar la compra
             EliminarProductosDelCarrito(clienteId);
 
-            return RedirectToAction("Index", "Home");
+
+
+            TempData["SuccessMessage"] = "Su Compra se ha realizado con éxito. Pronto le llegara un correo con más información de la compra.";
+            
+            return RedirectToAction("Confirmacion");
         }
 
 

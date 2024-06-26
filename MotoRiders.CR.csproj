@@ -158,6 +158,7 @@
     <Compile Include="Controllers\ProductoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PruebaController.cs" />
+    <Compile Include="Controllers\PruebaManejoController.cs" />
     <Compile Include="Controllers\RepuestosController.cs" />
     <Compile Include="Controllers\TalleresController.cs" />
     <Compile Include="Global.asax.cs">
@@ -198,6 +199,9 @@
     <Content Include="Views\CarritoCompra\index.cshtml" />
     <Content Include="Views\Cuenta\MiPerfil.cshtml" />
     <Content Include="Views\Carrito\index.cshtml" />
+    <Content Include="Views\CarritoCompra\Confirmacion.cshtml" />
+    <Content Include="Views\PruebaManejo\index.cshtml" />
+    <Content Include="Views\PruebaManejo\Confirmacion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

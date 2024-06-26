@@ -57,7 +57,7 @@ namespace MotoRiders.CR.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ocurrió un error al procesar su solicitud. Por favor, inténtelo de nuevo más tarde.";
-                ViewBag.ExceptionMessage = ex.Message; // Esto es solo para depuración, quítalo en producción
+                ViewBag.ExceptionMessage = ex.Message; 
                 ViewBag.TipoCotizacionList = ObtenerListaTipoCotizacion();
                 ViewBag.ProductoList = ObtenerListaProductos();
                 ViewBag.EstadoCivilList = ObtenerListaEstadoCivil();

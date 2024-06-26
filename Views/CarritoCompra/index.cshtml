@@ -34,7 +34,7 @@
                         <td>@item.Producto.Color</td>
                         <td>@item.Cantidad</td>
                         <td>@item.Producto.PrecioVenta.ToString("C")</td>
-                        <td>@(item.Cantidad * item.Producto.PrecioVenta).ToString("C")</td>
+                        <td>@( (item.Cantidad * item.Producto.PrecioVenta).ToString("C") )</td>
                         <td>
                             @Html.ActionLink("Eliminar", "EliminarDelCarrito", new { id = item.Id }, new { @class = "btn btn-danger" })
                         </td>
@@ -60,7 +60,7 @@
                             <h3 class="mb-4">Datos de Pago</h3>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.NombreTarjeta, new { @class = "control-label" })
-                                @Html.TextBoxFor(model => model.NombreTarjeta, new { @class = "form-control", required = "required" })
+                                @Html.TextBoxFor(model => model.NombreTarjeta, new { @class = "form-control", required = "required", @placeholder = "Visa, Mastercard, Amex" })
                                 <div class="invalid-feedback">Campo requerido.</div>
                             </div>
                             <div class="form-group">
@@ -70,7 +70,7 @@
                             </div>
                             <div class="form-group">
                                 @Html.LabelFor(model => model.FechaExpiracion, new { @class = "control-label" })
-                                @Html.TextBoxFor(model => model.FechaExpiracion, new { @class = "form-control", required = "required" })
+                                @Html.TextBoxFor(model => model.FechaExpiracion, new { @class = "form-control", required = "required", @placeholder = "Formato: 06/25" })
                                 <div class="invalid-feedback">Campo requerido.</div>
                             </div>
                             <div class="form-group">

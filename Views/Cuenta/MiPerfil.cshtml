@@ -3,44 +3,47 @@
 @{
     ViewBag.Title = "Mi Perfil";
 }
-
-<h2>Mi Perfil</h2>
-
-<div>
+<div class="cardP">
+    <h2>Mi Perfil</h2>
     <h3>@Model.nombre</h3>
-    <dl class="dl-horizontal">
-        <dt>
-            <strong>Cédula:</strong>
-        </dt>
-        <dd>
-            @Model.cedula
-        </dd>
-        <dt>
-            <strong>Dirección:</strong>
-        </dt>
-        <dd>
-            @Model.direccion
-        </dd>
-        <dt>
-            <strong>Teléfono:</strong>
-        </dt>
-        <dd>
-            @Model.telefono
-        </dd>
-        <dt>
-            <strong>Email:</strong>
-        </dt>
-        <dd>
-            @Model.email
-        </dd>
+    <dl>
+        <dt>Cédula:</dt>
+        <dd>@Model.cedula</dd>
+        <dt>Dirección:</dt>
+        <dd>@Model.direccion</dd>
+        <dt>Teléfono:</dt>
+        <dd>@Model.telefono</dd>
+        <dt>Email:</dt>
+        <dd>@Model.email</dd>
     </dl>
 </div>
-
 <p>
     <a href="@Url.Action("InicioSesion", "Cuenta")" class="btn btn-primary">Cerrar Sesión</a>
 </p>
 
+<style>
+    .cardP {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+    }
 
+        .cardP h2 {
+            text-align: center;
+        }
+
+        .cardP dt {
+            font-weight: bold;
+        }
+
+        .cardP dd {
+            margin: 0 0 10px 0;
+        }
+</style>
 <!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

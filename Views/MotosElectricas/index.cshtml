@@ -17,10 +17,10 @@
                             <h5 class="card-title">@item.Nombre</h5>
                             <p class="card-text"><strong>Modelo:</strong> @item.Modelo</p>
                             <p class="card-text"><strong>Precio:</strong> @item.PrecioVenta.ToString("C")</p>
-                            <div class="select-checkbox">
+                            <label class="checkbox-btn">
                                 <input type="checkbox" class="form-check-input motocicleta" name="productosSeleccionados" value="@item.Id">
-                                <label for="productosSeleccionados" class="form-check-label">Seleccionar</label>
-                            </div>
+                                <span class="checkmark"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -79,6 +79,8 @@
         showTooltip();
     });
 </script>
+
+
 
 <!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
