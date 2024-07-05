@@ -35,7 +35,13 @@ namespace MotoRiders.CR.Models
         public string email { get; set; }
 
         [Required]
-        [MaxLength(255)]
+        [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{14,20}$",
+            ErrorMessage = "La contraseña debe tener entre 14 y 20 caracteres, incluir al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.")]
         public string contraseña { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("contraseña", ErrorMessage = "Las contraseñas no coinciden.")]
+        public string ConfirmarContraseña { get; set; }
     }
 }

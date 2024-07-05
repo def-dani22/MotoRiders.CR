@@ -14,6 +14,18 @@ namespace MotoRiders.CR
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Cuenta", action = "InicioSesion", id = UrlParameter.Optional }
             );
+            // Ruta personalizada para ForgotPassword
+            routes.MapRoute(
+                name: "ForgotPassword",
+                url: "Cuenta/OlvideMiContrasena",
+                defaults: new { controller = "Cuenta", action = "OlvideMiContrasena" }
+            );
+
+            routes.MapRoute(
+                name: "ResetPassword",
+                url: "Cuenta/RestablecerContrasena",
+                defaults: new { controller = "Cuenta", action = "RestablecerContrasena" }
+            );
         }
     }
 }

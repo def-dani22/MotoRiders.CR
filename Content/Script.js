@@ -54,3 +54,48 @@ function agregarAlCarrito() {
         });
     });
 
+
+
+
+//CONTRASEÑA PARAMETROS
+$(document).ready(function () {
+    $('#newPassword').on('input', function () {
+        var password = $(this).val();
+        var length = password.length >= 14 && password.length <= 20;
+        var lowercase = /[a-z]/.test(password);
+        var uppercase = /[A-Z]/.test(password);
+        var digit = /[0-9]/.test(password);
+        var special = /[!@#$%^&*()_+<>?[\]{}|]/.test(password);
+
+        $('#length').toggleClass('valid', length).toggleClass('invalid', !length);
+        $('#lowercase').toggleClass('valid', lowercase).toggleClass('invalid', !lowercase);
+        $('#uppercase').toggleClass('valid', uppercase).toggleClass('invalid', !uppercase);
+        $('#digit').toggleClass('valid', digit).toggleClass('invalid', !digit);
+        $('#special').toggleClass('valid', special).toggleClass('invalid', !special);
+    });
+
+    $('form').on('submit', function (e) {
+        var newPassword = $('input[name="newPassword"]').val();
+        var confirmNewPassword = $('input[name="confirmNewPassword"]').val();
+        var errorMessage = '';
+
+        if (newPassword !== confirmNewPassword) {
+            errorMessage = 'Las contraseñas no coinciden.';
+        } else if (newPassword.length < 14 || newPassword.length > 20) {
+            errorMessage = 'La contraseña debe tener entre 14 y 20 caracteres.';
+        } else if (!/[a-z]/.test(newPassword)) {
+            errorMessage = 'La contraseña debe tener al menos una letra minúscula.';
+        } else if (!/[A-Z]/.test(newPassword)) {
+            errorMessage = 'La contraseña debe tener al menos una letra mayúscula.';
+        } else if (!/[0-9]/.test(newPassword)) {
+            errorMessage = 'La contraseña debe tener al menos un dígito.';
+        } else if (!/[!@#$%^&*()_+<>?[\]{}|]/.test(newPassword)) {
+            errorMessage = 'La contraseña debe tener al menos un carácter especial.';
+        }
+
+        if (errorMessage !== '') {
+            e.preventDefault();
+            alert(errorMessage);
+        }
+    });
+});

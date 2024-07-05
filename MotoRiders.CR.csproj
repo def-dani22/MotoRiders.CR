@@ -159,6 +159,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PruebaController.cs" />
     <Compile Include="Controllers\PruebaManejoController.cs" />
+    <Compile Include="Controllers\ReporteController.cs" />
     <Compile Include="Controllers\RepuestosController.cs" />
     <Compile Include="Controllers\TalleresController.cs" />
     <Compile Include="Global.asax.cs">
@@ -175,6 +176,7 @@
     <Compile Include="Models\PruebaManejo.cs" />
     <Compile Include="Models\Talleres.cs" />
     <Compile Include="Models\TipoCotizacion.cs" />
+    <Compile Include="Models\token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +204,10 @@
     <Content Include="Views\CarritoCompra\Confirmacion.cshtml" />
     <Content Include="Views\PruebaManejo\index.cshtml" />
     <Content Include="Views\PruebaManejo\Confirmacion.cshtml" />
+    <Content Include="Views\Cuenta\OlvideMiContrasena.cshtml" />
+    <Content Include="Views\Cuenta\RecuperarContrasena.cshtml" />
+    <Content Include="Views\Cuenta\VerificarToken.cshtml" />
+    <Content Include="Views\Reporte\index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
