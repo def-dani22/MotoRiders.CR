@@ -41,6 +41,174 @@ namespace MotoRiders.CR.Controllers
             return View(cliente);
         }
 
+
+
+
+
+
+
+
+
+
+        public ActionResult ResponderPreguntaSeguridad()
+        {
+            if (TempData["Email"] == null)
+            {
+                return RedirectToAction("OlvideMiContrasena");
+            }
+
+            string email = TempData["Email"].ToString();
+            int idCliente = ObtenerIdClientePorEmail(email);
+
+            // Seleccionar aleatoriamente entre PreguntaSeguridad1 y PreguntaSeguridad2
+            string preguntaSeleccionada;
+            string pregunta;
+            if (new Random().Next(2) == 0)
+            {
+                pregunta = ObtenerPreguntaSeguridad1(idCliente);
+                preguntaSeleccionada = "RespuestaSeguridad1";
+            }
+            else
+            {
+                pregunta = ObtenerPreguntaSeguridad2(idCliente);
+                preguntaSeleccionada = "RespuestaSeguridad2";
+            }
+
+            // Almacenar la pregunta seleccionada y la columna de la respuesta en TempData
+            TempData["PreguntaSeguridad"] = pregunta;
+            TempData["PreguntaSeleccionada"] = preguntaSeleccionada;
+            TempData["Email"] = email;
+
+            ViewBag.Pregunta = pregunta;
+            ViewBag.Email = email;
+
+            return View();
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResponderPreguntaSeguridad(string respuesta)
+        {
+            if (TempData["Email"] == null || TempData["PreguntaSeleccionada"] == null)
+            {
+                return RedirectToAction("OlvideMiContrasena");
+            }
+
+            string email = TempData["Email"].ToString();
+            string preguntaSeleccionada = TempData["PreguntaSeleccionada"].ToString();
+            int idCliente = ObtenerIdClientePorEmail(email);
+
+            string respuestaAlmacenada = ObtenerRespuestaSeguridad(email, preguntaSeleccionada);
+
+            if (respuesta.Equals(respuestaAlmacenada, StringComparison.OrdinalIgnoreCase))
+            {
+                // Respuesta correcta, generar y enviar token
+                string token = TokenGenerator.GenerarTokensSeguridad(10);
+                string encryptedToken = EncryptionHelper.Encrypt(token);
+
+                try
+                {
+                    GuardarToken(idCliente, encryptedToken, DateTime.Now);
+                    EnviarCorreoRecuperacion(email, token);
+                    TempData["Message"] = "Se ha enviado un correo con las instrucciones para recuperar su contraseña.";
+                    return RedirectToAction("RecuperarContrasena", new { token = token });
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = "Ocurrió un error al enviar el correo de recuperación: " + ex.Message;
+                }
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "La respuesta de seguridad es incorrecta.";
+            }
+
+            // Almacenar la pregunta y el email de nuevo en ViewBag para mostrar en la vista
+            ViewBag.Pregunta = TempData["PreguntaSeguridad"].ToString();
+            ViewBag.Email = email;
+
+            return View();
+        }
+
+        private string ObtenerPreguntaSeguridad1(int idCliente)
+        {
+            string pregunta = null;
+            string query = "SELECT PreguntaSeguridad1 FROM Clientes WHERE idCliente = @IdCliente";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdCliente", idCliente);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            pregunta = reader["PreguntaSeguridad1"].ToString();
+                        }
+                    }
+                }
+            }
+
+            return pregunta;
+        }
+
+        private string ObtenerPreguntaSeguridad2(int idCliente)
+        {
+            string pregunta = null;
+            string query = "SELECT PreguntaSeguridad2 FROM Clientes WHERE idCliente = @IdCliente";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@IdCliente", idCliente);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            pregunta = reader["PreguntaSeguridad2"].ToString();
+                        }
+                    }
+                }
+            }
+
+            return pregunta;
+        }
+
+        private string ObtenerRespuestaSeguridad(string email, string preguntaSeleccionada)
+        {
+            string respuesta = null;
+            string query = $"SELECT {preguntaSeleccionada} FROM Clientes WHERE email = @Email";
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            respuesta = reader[preguntaSeleccionada].ToString();
+                        }
+                    }
+                }
+            }
+
+            return respuesta;
+        }
+
+
+
+
+
+
         private bool EmailRegistrado(string email)
         {
             string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email";
@@ -58,8 +226,8 @@ namespace MotoRiders.CR.Controllers
 
         private void InsertarCliente(ClienteModel cliente)
         {
-            string query = "INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña) " +
-                           "VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña)";
+            string query = "INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) " +
+                           "VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2)";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -70,12 +238,17 @@ namespace MotoRiders.CR.Controllers
                     command.Parameters.AddWithValue("@Telefono", cliente.telefono);
                     command.Parameters.AddWithValue("@Email", cliente.email);
                     command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
+                    command.Parameters.AddWithValue("@PreguntaSeguridad1", cliente.preguntaSeguridad1);
+                    command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
+                    command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
+                    command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
 
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
             }
         }
+
 
         public ActionResult InicioSesion()
         {
@@ -345,21 +518,23 @@ namespace MotoRiders.CR.Controllers
             int idCliente = ObtenerIdClientePorEmail(email);
             if (idCliente != 0)
             {
-                string token = TokenGenerator.GenerarTokensSeguridad(10);
-                string encryptedToken = EncryptionHelper.Encrypt(token);
+                // Seleccionar al azar una pregunta de seguridad
+                Random random = new Random();
+                int preguntaIndex = random.Next(1, 3); // 1 o 2
 
-                try
+                string pregunta = preguntaIndex == 1 ? ObtenerPreguntaSeguridad1(idCliente) : ObtenerPreguntaSeguridad2(idCliente);
+                if (pregunta == null)
                 {
-                    GuardarToken(idCliente, encryptedToken, DateTime.Now);
-                    EnviarCorreoRecuperacion(email, token);
-                    ViewBag.Message = "Se ha enviado un correo con las instrucciones para recuperar su contraseña.";
-                    // Redirigir a la vista de RestablecerContrasena con el token como parámetro
-                    return RedirectToAction("RecuperarContrasena", new { token = token });
+                    ViewBag.ErrorMessage = "No se encontraron preguntas de seguridad asociadas a este correo electrónico.";
+                    return View();
                 }
-                catch (Exception ex)
-                {
-                    ViewBag.ErrorMessage = "Ocurrió un error al enviar el correo de recuperación: " + ex.Message;
-                }
+
+                // Guardar la pregunta seleccionada en TempData
+                TempData["PreguntaSeguridad"] = pregunta;
+                TempData["Email"] = email;
+
+                // Redirigir a la vista de responder pregunta de seguridad
+                return RedirectToAction("ResponderPreguntaSeguridad");
             }
             else
             {

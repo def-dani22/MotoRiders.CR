@@ -43,5 +43,22 @@ namespace MotoRiders.CR.Models
         [DataType(DataType.Password)]
         [Compare("contraseña", ErrorMessage = "Las contraseñas no coinciden.")]
         public string ConfirmarContraseña { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string preguntaSeguridad1 { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string respuestaSeguridad1 { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string preguntaSeguridad2 { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        public string respuestaSeguridad2 { get; set; }
+
     }
 }

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace MotoRiders.CR.Controllers
 {
+    [Authorize]
     public class TalleresController : Controller
     {
         private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
