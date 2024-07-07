@@ -250,18 +250,33 @@ namespace MotoRiders.CR.Controllers
         }
 
 
+        private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
+        private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
+
+        // Método para mostrar la vista de inicio de sesión
         public ActionResult InicioSesion()
         {
             return View();
         }
 
+        // Método para procesar el inicio de sesión
         [HttpPost]
         public ActionResult InicioSesion(string email, string contraseña)
         {
+            // Verificar si el usuario está bloqueado
+            if (UsuarioBloqueado(email))
+            {
+                ModelState.AddModelError("", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
+                return View();
+            }
+
             string encryptedPassword = EncryptPassword(contraseña); // Cifrar la contraseña ingresada
 
             if (VerificarCredenciales(email, encryptedPassword))
             {
+                // Reiniciar los intentos fallidos
+                ReiniciarIntentosFallidos(email);
+
                 // Configurar el ticket de autenticación manualmente
                 FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
                     1, // Versión del ticket
@@ -283,10 +298,24 @@ namespace MotoRiders.CR.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError("", "El email o la contraseña son incorrectos.");
+            // Incrementar los intentos fallidos y verificar si se ha alcanzado el máximo
+            IncrementarIntentosFallidos(email);
+            int intentosRestantes = MaxIntentosFallidos - ObtenerIntentosFallidos(email);
+
+            if (intentosRestantes > 0)
+            {
+                ModelState.AddModelError("", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
+            }
+            else
+            {
+                BloquearUsuario(email);
+                ModelState.AddModelError("", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
+            }
+
             return View();
         }
 
+        // Método para verificar las credenciales del usuario
         private bool VerificarCredenciales(string email, string contraseña)
         {
             string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email AND contraseña = @Contraseña";
@@ -302,6 +331,118 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
+
+        // Método para verificar si el usuario está bloqueado
+        private bool UsuarioBloqueado(string email)
+        {
+            DateTime? fechaBloqueo = ObtenerFechaBloqueo(email);
+
+            if (fechaBloqueo.HasValue && fechaBloqueo > DateTime.Now)
+            {
+                return true; // Usuario bloqueado
+            }
+
+            return false; // Usuario no bloqueado
+        }
+
+        // Método para obtener la fecha de bloqueo del usuario desde la base de datos
+        private DateTime? ObtenerFechaBloqueo(string email)
+        {
+            string query = "SELECT tiempoBloqueo FROM Clientes WHERE email = @Email";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    var result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return (DateTime)result;
+                    }
+                    return null;
+                }
+            }
+        }
+
+        // Método para bloquear al usuario
+        private void BloquearUsuario(string email)
+        {
+            DateTime fechaDesbloqueo = DateTime.Now.AddMinutes(TiempoBloqueoMinutos);
+            string query = "UPDATE Clientes SET tiempoBloqueo = @tiempoBloqueo WHERE email = @Email";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@tiempoBloqueo", fechaDesbloqueo);
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Método para incrementar los intentos fallidos
+        private void IncrementarIntentosFallidos(string email)
+        {
+            int intentosActuales = ObtenerIntentosFallidos(email);
+            intentosActuales++;
+
+            if (intentosActuales > MaxIntentosFallidos)
+            {
+                BloquearUsuario(email); // Bloquear usuario si se superan los intentos fallidos
+            }
+            else
+            {
+                string query = "UPDATE Clientes SET IntentosFallidos = @IntentosFallidos WHERE email = @Email";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@IntentosFallidos", intentosActuales);
+                        command.Parameters.AddWithValue("@Email", email);
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        // Método para reiniciar los intentos fallidos
+        private void ReiniciarIntentosFallidos(string email)
+        {
+            string query = "UPDATE Clientes SET IntentosFallidos = 0, tiempoBloqueo = NULL WHERE email = @Email";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Método para obtener los intentos fallidos actuales
+        private int ObtenerIntentosFallidos(string email)
+        {
+            string query = "SELECT IntentosFallidos FROM Clientes WHERE email = @Email";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    var result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return (int)result;
+                    }
+                    return 0;
+                }
+            }
+        }
+
 
         private ClienteModel ObtenerClienteDesdeSesion()
         {

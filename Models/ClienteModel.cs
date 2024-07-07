@@ -60,5 +60,8 @@ namespace MotoRiders.CR.Models
         [MaxLength(255)]
         public string respuestaSeguridad2 { get; set; }
 
+        public int intentosFallidos { get; set; }
+        public DateTime? tiempoBloqueo { get; set; }
+
     }
 }
