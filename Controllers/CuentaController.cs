@@ -278,7 +278,6 @@ namespace MotoRiders.CR.Controllers
 
             string encryptedPassword = EncryptPassword(contraseña); // Cifrar la contraseña ingresada
 
-
             if (VerificarCredenciales(email, encryptedPassword))
             {
                 // Reiniciar los intentos fallidos
@@ -302,7 +301,20 @@ namespace MotoRiders.CR.Controllers
                 Response.Cookies.Add(authCookie);
 
                 TempData["Mensaje"] = "¡Inicio de sesión exitoso!";
-                return RedirectToAction("Index", "Home");
+               
+            
+
+
+            // Generar y guardar el token
+            string token = TokenGenerator.GenerarTokensSeguridad(10); // Genera un token de 10 caracteres
+                string encryptedToken = EncryptionHelper.Encrypt(token); // Cifrar el token antes de guardarlo
+                GuardarToken(ObtenerIdClientePorEmail(email), encryptedToken, DateTime.Now);
+
+                // Enviar el token por correo electrónico
+                EnviarCorreoRecuperacion2FA(email, token);
+
+                // Redirigir a la vista para verificar el token
+                return RedirectToAction("VerificarToken2FA", new { email = email });
             }
 
             // Incrementar los intentos fallidos y verificar si se ha alcanzado el máximo
@@ -338,6 +350,9 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
+
+
+
 
         // Método para verificar si el usuario está bloqueado
         private bool UsuarioBloqueado(string email)
@@ -624,6 +639,16 @@ namespace MotoRiders.CR.Controllers
 
 
 
+
+
+
+
+
+
+
+
+
+
         public ActionResult VerificarToken()
         {
             return View();
@@ -651,6 +676,51 @@ namespace MotoRiders.CR.Controllers
                 return View();
             }
         }
+
+
+
+
+
+
+
+
+
+
+        public ActionResult VerificarToken2FA()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult VerificarToken2FA(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                ViewBag.ErrorMessage = "Token inválido.";
+                return View();
+            }
+
+            string email = ObtenerEmailDesdeToken(token);
+
+            if (email != null)
+            {
+                TempData["Token"] = token; // Guardar el token temporalmente
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "El token es inválido o ha expirado.";
+                return View();
+            }
+        }
+
+
+
+
+
+
+
 
 
 
@@ -692,7 +762,7 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
-
+        
         private int ObtenerIdClientePorEmail(string email)
         {
             string query = "SELECT idCliente FROM Clientes WHERE email = @Email";
@@ -886,6 +956,45 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        private void EnviarCorreoRecuperacion2FA(string email, string token)
+        {
+            string remitente = "estebangomez1015@gmail.com";
+            string contraseña = "dzmoqbkgfzfqquwf";
+            string asunto = "Doble factor de autenticación";
+            string cuerpo = $"Para confirmar el inicio de sesión, ingrese el siguiente código: {token}";
+
+            using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
+            {
+                clienteSmtp.EnableSsl = true;
+                clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
+
+                using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                {
+                    mensaje.IsBodyHtml = true;
+                    clienteSmtp.Send(mensaje);
+                }
+            }
+        }
+    
+
+
+
+
+
 
         private string EncryptPassword(string password)
             {
