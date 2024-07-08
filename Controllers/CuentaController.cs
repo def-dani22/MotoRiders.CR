@@ -226,6 +226,12 @@ namespace MotoRiders.CR.Controllers
 
         private void InsertarCliente(ClienteModel cliente)
         {
+            // Encriptar los datos sensibles
+            string encryptedPreguntaSeguridad1 = EncryptionHelper.Encrypt(cliente.preguntaSeguridad1);
+            string encryptedRespuestaSeguridad1 = EncryptionHelper.Encrypt(cliente.respuestaSeguridad1);
+            string encryptedPreguntaSeguridad2 = EncryptionHelper.Encrypt(cliente.preguntaSeguridad2);
+            string encryptedRespuestaSeguridad2 = EncryptionHelper.Encrypt(cliente.respuestaSeguridad2);
+
             string query = "INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) " +
                            "VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2)";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -238,10 +244,10 @@ namespace MotoRiders.CR.Controllers
                     command.Parameters.AddWithValue("@Telefono", cliente.telefono);
                     command.Parameters.AddWithValue("@Email", cliente.email);
                     command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
-                    command.Parameters.AddWithValue("@PreguntaSeguridad1", cliente.preguntaSeguridad1);
-                    command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
-                    command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
-                    command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
+                    command.Parameters.AddWithValue("@PreguntaSeguridad1", encryptedPreguntaSeguridad1);
+                    command.Parameters.AddWithValue("@RespuestaSeguridad1", encryptedRespuestaSeguridad1);
+                    command.Parameters.AddWithValue("@PreguntaSeguridad2", encryptedPreguntaSeguridad2);
+                    command.Parameters.AddWithValue("@RespuestaSeguridad2", encryptedRespuestaSeguridad2);
 
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -271,6 +277,7 @@ namespace MotoRiders.CR.Controllers
             }
 
             string encryptedPassword = EncryptPassword(contraseña); // Cifrar la contraseña ingresada
+
 
             if (VerificarCredenciales(email, encryptedPassword))
             {
