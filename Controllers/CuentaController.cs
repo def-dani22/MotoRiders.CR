@@ -224,6 +224,7 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
+        // Método para insertar un nuevo cliente y asignarle el rol "User"
         private void InsertarCliente(ClienteModel cliente)
         {
             // Encriptar los datos sensibles
@@ -232,31 +233,102 @@ namespace MotoRiders.CR.Controllers
             string encryptedPreguntaSeguridad2 = EncryptionHelper.Encrypt(cliente.preguntaSeguridad2);
             string encryptedRespuestaSeguridad2 = EncryptionHelper.Encrypt(cliente.respuestaSeguridad2);
 
-            string query = "INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) " +
-                           "VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2)";
+            string query = @"
+            INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) 
+            VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2);
+            SELECT SCOPE_IDENTITY();
+        ";
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                connection.Open();
+                try
                 {
-                    command.Parameters.AddWithValue("@Cedula", cliente.cedula);
-                    command.Parameters.AddWithValue("@Nombre", cliente.nombre);
-                    command.Parameters.AddWithValue("@Direccion", cliente.direccion);
-                    command.Parameters.AddWithValue("@Telefono", cliente.telefono);
-                    command.Parameters.AddWithValue("@Email", cliente.email);
-                    command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
-                    command.Parameters.AddWithValue("@PreguntaSeguridad1", encryptedPreguntaSeguridad1);
-                    command.Parameters.AddWithValue("@RespuestaSeguridad1", encryptedRespuestaSeguridad1);
-                    command.Parameters.AddWithValue("@PreguntaSeguridad2", encryptedPreguntaSeguridad2);
-                    command.Parameters.AddWithValue("@RespuestaSeguridad2", encryptedRespuestaSeguridad2);
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Cedula", cliente.cedula);
+                        command.Parameters.AddWithValue("@Nombre", cliente.nombre);
+                        command.Parameters.AddWithValue("@Direccion", cliente.direccion);
+                        command.Parameters.AddWithValue("@Telefono", cliente.telefono);
+                        command.Parameters.AddWithValue("@Email", cliente.email);
+                        command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
+                        command.Parameters.AddWithValue("@PreguntaSeguridad1", encryptedPreguntaSeguridad1);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad1", encryptedRespuestaSeguridad1);
+                        command.Parameters.AddWithValue("@PreguntaSeguridad2", encryptedPreguntaSeguridad2);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad2", encryptedRespuestaSeguridad2);
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
+                        // Ejecutar la inserción y obtener el ID del cliente
+                        int idCliente = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Asignar el rol "User" al nuevo cliente
+                        AsignarRol(idCliente, "User", connection);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                    throw new Exception("Error al insertar cliente y obtener ID.", ex);
                 }
             }
         }
 
+        // Método para verificar si el cliente tiene un rol específico
+        private bool ClienteTieneRol(string email, string rolNombre)
+        {
+            string query = @"
+            SELECT COUNT(*) 
+            FROM UsuarioRoles ur 
+            JOIN Clientes c ON ur.idUsuario = c.idCliente 
+            JOIN Roles r ON ur.idRol = r.idRol 
+            WHERE c.email = @Email AND r.nombre = @RolNombre
+        ";
 
-        private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@RolNombre", rolNombre);
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
+        // Método para asignar un rol específico a un cliente
+        private void AsignarRol(int idCliente, string rolNombre, SqlConnection connection)
+        {
+            string query = @"
+            INSERT INTO UsuarioRoles (idUsuario, idRol) 
+            SELECT @IdCliente, idRol 
+            FROM Roles 
+            WHERE nombre = @RolNombre
+        ";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@IdCliente", idCliente);
+                command.Parameters.AddWithValue("@RolNombre", rolNombre);
+                command.ExecuteNonQuery();
+            }
+        }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
         private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
 
         // Método para mostrar la vista de inicio de sesión
