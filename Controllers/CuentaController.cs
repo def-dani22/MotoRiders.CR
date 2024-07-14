@@ -39,6 +39,7 @@ namespace MotoRiders.CR.Controllers
                 // Generar y enviar el token de verificación
                 string token = TokenGenerator.GenerarTokensSeguridad(10);
                 string encryptedToken = EncryptionHelper.Encrypt(token);
+                
 
                 try
                 {
@@ -46,6 +47,7 @@ namespace MotoRiders.CR.Controllers
                     EnviarCorreoVerificacion(cliente.email, token);
 
                     // Guardar los datos del cliente temporalmente en TempData
+
                     TempData["Cedula"] = cliente.cedula;
                     TempData["Nombre"] = cliente.nombre;
                     TempData["Direccion"] = cliente.direccion;
@@ -57,6 +59,7 @@ namespace MotoRiders.CR.Controllers
                     TempData["PreguntaSeguridad2"] = cliente.preguntaSeguridad2;
                     TempData["RespuestaSeguridad2"] = cliente.respuestaSeguridad2;
                     TempData["TokenVerificacion"] = encryptedToken;
+
 
                     // Redirigir a la vista de verificación de correo
                     return RedirectToAction("VerificarCorreo");
