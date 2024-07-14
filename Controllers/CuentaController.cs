@@ -21,6 +21,10 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
+
+
+
+
         [HttpPost]
         public ActionResult Registro(ClienteModel cliente)
         {
@@ -32,10 +36,36 @@ namespace MotoRiders.CR.Controllers
                     return View(cliente);
                 }
 
-                cliente.contraseña = EncryptionHelper.Encrypt(cliente.contraseña);
-                InsertarCliente(cliente);
+                // Generar y enviar el token de verificación
+                string token = TokenGenerator.GenerarTokensSeguridad(10);
+                string encryptedToken = EncryptionHelper.Encrypt(token);
 
-                return RedirectToAction("InicioSesion", "Cuenta");
+                try
+                {
+                    // Enviar el correo con el token
+                    EnviarCorreoVerificacion(cliente.email, token);
+
+                    // Guardar los datos del cliente temporalmente en TempData
+                    TempData["Cedula"] = cliente.cedula;
+                    TempData["Nombre"] = cliente.nombre;
+                    TempData["Direccion"] = cliente.direccion;
+                    TempData["Telefono"] = cliente.telefono;
+                    TempData["Email"] = cliente.email;
+                    TempData["Contraseña"] = cliente.contraseña;
+                    TempData["PreguntaSeguridad1"] = cliente.preguntaSeguridad1;
+                    TempData["RespuestaSeguridad1"] = cliente.respuestaSeguridad1;
+                    TempData["PreguntaSeguridad2"] = cliente.preguntaSeguridad2;
+                    TempData["RespuestaSeguridad2"] = cliente.respuestaSeguridad2;
+                    TempData["TokenVerificacion"] = encryptedToken;
+
+                    // Redirigir a la vista de verificación de correo
+                    return RedirectToAction("VerificarCorreo");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Ocurrió un error al enviar el correo de verificación: " + ex.Message);
+                    return View(cliente);
+                }
             }
 
             return View(cliente);
@@ -44,11 +74,25 @@ namespace MotoRiders.CR.Controllers
 
 
 
+        //[HttpPost]
+        //public ActionResult Registro(ClienteModel cliente)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (EmailRegistrado(cliente.email))
+        //        {
+        //            ModelState.AddModelError("Email", "Este correo ya está registrado.");
+        //            return View(cliente);
+        //        }
 
+        //        cliente.contraseña = EncryptionHelper.Encrypt(cliente.contraseña);
+        //        InsertarCliente(cliente);
 
+        //        return RedirectToAction("InicioSesion", "Cuenta");
+        //    }
 
-
-
+        //    return View(cliente);
+        //}
 
         public ActionResult ResponderPreguntaSeguridad()
         {
@@ -84,8 +128,6 @@ namespace MotoRiders.CR.Controllers
 
             return View();
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -205,10 +247,6 @@ namespace MotoRiders.CR.Controllers
         }
 
 
-
-
-
-
         private bool EmailRegistrado(string email)
         {
             string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email";
@@ -227,11 +265,7 @@ namespace MotoRiders.CR.Controllers
         // Método para insertar un nuevo cliente y asignarle el rol "User"
         private void InsertarCliente(ClienteModel cliente)
         {
-            // Encriptar los datos sensibles
-            string encryptedPreguntaSeguridad1 = EncryptionHelper.Encrypt(cliente.preguntaSeguridad1);
-            string encryptedRespuestaSeguridad1 = EncryptionHelper.Encrypt(cliente.respuestaSeguridad1);
-            string encryptedPreguntaSeguridad2 = EncryptionHelper.Encrypt(cliente.preguntaSeguridad2);
-            string encryptedRespuestaSeguridad2 = EncryptionHelper.Encrypt(cliente.respuestaSeguridad2);
+            
 
             string query = @"
             INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) 
@@ -252,10 +286,10 @@ namespace MotoRiders.CR.Controllers
                         command.Parameters.AddWithValue("@Telefono", cliente.telefono);
                         command.Parameters.AddWithValue("@Email", cliente.email);
                         command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
-                        command.Parameters.AddWithValue("@PreguntaSeguridad1", encryptedPreguntaSeguridad1);
-                        command.Parameters.AddWithValue("@RespuestaSeguridad1", encryptedRespuestaSeguridad1);
-                        command.Parameters.AddWithValue("@PreguntaSeguridad2", encryptedPreguntaSeguridad2);
-                        command.Parameters.AddWithValue("@RespuestaSeguridad2", encryptedRespuestaSeguridad2);
+                        command.Parameters.AddWithValue("@PreguntaSeguridad1", cliente.preguntaSeguridad1);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
+                        command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
 
                         // Ejecutar la inserción y obtener el ID del cliente
                         int idCliente = Convert.ToInt32(command.ExecuteScalar());
@@ -314,19 +348,6 @@ namespace MotoRiders.CR.Controllers
             }
         }
     
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
         private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
@@ -796,6 +817,86 @@ namespace MotoRiders.CR.Controllers
 
 
 
+        public ActionResult VerificarCorreo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult VerificarCorreo(string token)
+        {
+            if (TempData["TokenVerificacion"] == null)
+            {
+                return RedirectToAction("Registro");
+            }
+
+            string encryptedToken = TempData["TokenVerificacion"].ToString();
+
+            if (token.Equals(EncryptionHelper.Decrypt(encryptedToken), StringComparison.OrdinalIgnoreCase))
+            {
+                // Token correcto, registrar el cliente
+                try
+                {
+                    ClienteModel clienteTemporal = new ClienteModel
+                    {
+                        cedula = TempData["Cedula"].ToString(),
+                        nombre = TempData["Nombre"].ToString(),
+                        direccion = TempData["Direccion"].ToString(),
+                        telefono = TempData["Telefono"].ToString(),
+                        email = TempData["Email"].ToString(),
+                        contraseña = EncryptionHelper.Encrypt(TempData["Contraseña"].ToString()),
+                        preguntaSeguridad1 = TempData["PreguntaSeguridad1"].ToString(),
+                        respuestaSeguridad1 = TempData["RespuestaSeguridad1"].ToString(),
+                        preguntaSeguridad2 = TempData["PreguntaSeguridad2"].ToString(),
+                        respuestaSeguridad2 = TempData["RespuestaSeguridad2"].ToString()
+                    };
+
+                    InsertarCliente(clienteTemporal);
+                    TempData["Message"] = "Registro exitoso. Ahora puede iniciar sesión.";
+                    return RedirectToAction("InicioSesion", "Cuenta");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Ocurrió un error al registrar el cliente: " + ex.Message);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "El token de verificación es incorrecto.");
+            }
+
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // GET: Cuenta/OlvideMiContrasena
         public ActionResult OlvideMiContrasena()
         {
@@ -1061,7 +1162,34 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
-    
+
+
+
+
+        //verificartoken2FA
+
+
+
+        private void EnviarCorreoVerificacion(string email, string token)
+        {
+            string remitente = "estebangomez1015@gmail.com";
+            string contraseña = "dzmoqbkgfzfqquwf";
+            string asunto = "Confirmar Registro";
+            string cuerpo = $"Para registrarse en MotoRiders, ingrese el siguiente código: {token}";
+
+            using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
+            {
+                clienteSmtp.EnableSsl = true;
+                clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
+
+                using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                {
+                    mensaje.IsBodyHtml = true;
+                    clienteSmtp.Send(mensaje);
+                }
+            }
+        }
+
 
 
 

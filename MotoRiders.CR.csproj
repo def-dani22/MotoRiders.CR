@@ -219,6 +219,8 @@
     <Content Include="Views\HomeAnalistaDatos\index.cshtml" />
     <Content Include="Views\Cuenta\ResponderPreguntaSeguridad.cshtml" />
     <Content Include="Views\Cuenta\VerificarToken2FA.cshtml" />
+    <Content Include="Views\Reporte\AccesoDenegado.cshtml" />
+    <Content Include="Views\Cuenta\VerificarCorreo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

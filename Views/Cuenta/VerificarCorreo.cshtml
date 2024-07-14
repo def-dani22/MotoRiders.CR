@@ -29,14 +29,10 @@
             <span class="logo-text">MotoRiders</span>
         </div>
     </nav>
-    @model string
-    @{
-        ViewBag.Title = "Verificar Correo";
-    }
 
     <h2>Verificar Token</h2>
 
-    @using (Html.BeginForm("VerificarCorreo", "Cuenta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    @using (Html.BeginForm("VerificarToken", "Cuenta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
 
@@ -59,6 +55,7 @@
     {
         <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
     }
+
 
 
 
