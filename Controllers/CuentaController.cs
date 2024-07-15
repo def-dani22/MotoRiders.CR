@@ -354,7 +354,109 @@ namespace MotoRiders.CR.Controllers
         }
     
 
-    private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
+    //private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
+    //    private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
+
+    //    // Método para mostrar la vista de inicio de sesión
+    //    public ActionResult InicioSesion()
+    //    {
+    //        return View();
+    //    }
+
+        //// Método para procesar el inicio de sesión
+        //[HttpPost]
+        //public ActionResult InicioSesion(string email, string contraseña)
+        //{
+        //    // Verificar si el usuario está bloqueado
+        //    if (UsuarioBloqueado(email))
+        //    {
+        //        AuditoriaHelper.RegistrarAccion(email, "Intento de Inicio de Sesión - Usuario Bloqueado", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
+        //        ModelState.AddModelError("", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
+        //        return View();
+        //    }
+
+        //    string encryptedPassword = EncryptPassword(contraseña); // Cifrar la contraseña ingresada
+
+        //    if (VerificarCredenciales(email, encryptedPassword))
+        //    {
+        //        // Reiniciar los intentos fallidos
+        //        ReiniciarIntentosFallidos(email);
+
+        //        // Configurar el ticket de autenticación manualmente
+        //        FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+        //            1, // Versión del ticket
+        //            email, // Nombre del usuario asociado al ticket
+        //            DateTime.Now, // Fecha y hora de emisión
+        //            DateTime.Now.AddMinutes(30), // Fecha y hora de expiración
+        //            false, // Si la cookie debe ser persistente
+        //            String.Empty, // Datos de usuario (puede ser una cadena con información adicional)
+        //            FormsAuthentication.FormsCookiePath); // Ruta de la cookie
+
+        //        // Encriptar el ticket
+        //        string encryptedTicket = FormsAuthentication.Encrypt(ticket);
+
+        //        // Crear la cookie
+        //        HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+        //        Response.Cookies.Add(authCookie);
+
+        //        // Obtener el rol del usuario
+        //        string rol = ObtenerRolUsuario(email);
+        //        // Registrar acción de auditoría de inicio de sesión exitoso
+        //        AuditoriaHelper.RegistrarAccion(email, "Inicio de Sesión Exitoso", "El usuario inició sesión correctamente.");
+
+
+        //        // Redirigir según el rol del usuario
+        //        if (rol == "Admin")
+        //        {
+        //            return RedirectToAction("Index", "HomeAnalistaDatos");
+        //        }
+        //        else if (rol == "User")
+        //        {
+        //            return RedirectToAction("Index", "Home");
+        //        }
+
+        //        TempData["Mensaje"] = "¡Inicio de sesión exitoso!";
+        //    }
+
+        //    // Incrementar los intentos fallidos y verificar si se ha alcanzado el máximo
+        //    IncrementarIntentosFallidos(email);
+        //    int intentosRestantes = MaxIntentosFallidos - ObtenerIntentosFallidos(email);
+
+        //    if (intentosRestantes > 0)
+        //    {
+        //        AuditoriaHelper.RegistrarAccion(email, "Intento de Inicio de Sesión Fallido", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
+        //        ModelState.AddModelError("", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
+        //    }
+        //    else
+        //    {
+        //        BloquearUsuario(email);
+        //        AuditoriaHelper.RegistrarAccion(email, "Usuario Bloqueado", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
+        //        ModelState.AddModelError("", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
+        //    }
+
+        //    return View();
+        //}
+
+
+        //// Método para verificar las credenciales del usuario
+        //private bool VerificarCredenciales(string email, string contraseña)
+        //{
+        //    string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email AND contraseña = @Contraseña";
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@Email", email);
+        //            command.Parameters.AddWithValue("@Contraseña", contraseña);
+        //            connection.Open();
+        //            int count = (int)command.ExecuteScalar();
+        //            return count > 0;
+        //        }
+        //    }
+        //}
+
+
+        private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
         private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
 
         // Método para mostrar la vista de inicio de sesión
@@ -370,7 +472,6 @@ namespace MotoRiders.CR.Controllers
             // Verificar si el usuario está bloqueado
             if (UsuarioBloqueado(email))
             {
-                AuditoriaHelper.RegistrarAccion(email, "Intento de Inicio de Sesión - Usuario Bloqueado", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
                 ModelState.AddModelError("", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
                 return View();
             }
@@ -399,23 +500,21 @@ namespace MotoRiders.CR.Controllers
                 HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
                 Response.Cookies.Add(authCookie);
 
-                // Obtener el rol del usuario
-                string rol = ObtenerRolUsuario(email);
-                // Registrar acción de auditoría de inicio de sesión exitoso
-                AuditoriaHelper.RegistrarAccion(email, "Inicio de Sesión Exitoso", "El usuario inició sesión correctamente.");
-
-
-                // Redirigir según el rol del usuario
-                if (rol == "Admin")
-                {
-                    return RedirectToAction("Index", "HomeAnalistaDatos");
-                }
-                else if (rol == "User")
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
                 TempData["Mensaje"] = "¡Inicio de sesión exitoso!";
+
+
+
+
+                // Generar y guardar el token
+                string token = TokenGenerator.GenerarTokensSeguridad(10); // Genera un token de 10 caracteres
+                string encryptedToken = EncryptionHelper.Encrypt(token); // Cifrar el token antes de guardarlo
+                GuardarToken(ObtenerIdClientePorEmail(email), encryptedToken, DateTime.Now);
+
+                // Enviar el token por correo electrónico
+                EnviarCorreoRecuperacion2FA(email, token);
+
+                // Redirigir a la vista para verificar el token
+                return RedirectToAction("VerificarToken2FA", new { email = email });
             }
 
             // Incrementar los intentos fallidos y verificar si se ha alcanzado el máximo
@@ -424,19 +523,16 @@ namespace MotoRiders.CR.Controllers
 
             if (intentosRestantes > 0)
             {
-                AuditoriaHelper.RegistrarAccion(email, "Intento de Inicio de Sesión Fallido", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
                 ModelState.AddModelError("", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
             }
             else
             {
                 BloquearUsuario(email);
-                AuditoriaHelper.RegistrarAccion(email, "Usuario Bloqueado", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
                 ModelState.AddModelError("", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
             }
 
             return View();
         }
-
 
         // Método para verificar las credenciales del usuario
         private bool VerificarCredenciales(string email, string contraseña)
@@ -803,8 +899,6 @@ namespace MotoRiders.CR.Controllers
 
 
 
-
-
         public ActionResult VerificarToken2FA()
         {
             return View();
@@ -825,6 +919,21 @@ namespace MotoRiders.CR.Controllers
             if (email != null)
             {
                 TempData["Token"] = token; // Guardar el token temporalmente
+
+                // Obtener el rol del usuario
+                string rol = ObtenerRolUsuario(email);
+
+                // Redirigir según el rol del usuario
+                if (rol == "Admin")
+                {
+                    return RedirectToAction("Index", "HomeAnalistaDatos");
+                }
+                else if (rol == "User")
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                // Si el rol no coincide con ninguno, redirigir a una vista de error o una vista por defecto
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -833,9 +942,6 @@ namespace MotoRiders.CR.Controllers
                 return View();
             }
         }
-
-
-
 
 
 
