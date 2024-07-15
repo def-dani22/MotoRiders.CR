@@ -36,6 +36,8 @@ namespace MotoRiders.CR.Controllers
                     return View(cliente);
                 }
 
+
+
                 // Generar y enviar el token de verificación
                 string token = TokenGenerator.GenerarTokensSeguridad(10);
                 string encryptedToken = EncryptionHelper.Encrypt(token);
@@ -368,6 +370,7 @@ namespace MotoRiders.CR.Controllers
             // Verificar si el usuario está bloqueado
             if (UsuarioBloqueado(email))
             {
+                AuditoriaHelper.RegistrarAccion(email, "Intento de Inicio de Sesión - Usuario Bloqueado", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
                 ModelState.AddModelError("", $"El usuario está bloqueado. Inténtalo nuevamente después de {TiempoBloqueoMinutos} minutos.");
                 return View();
             }
@@ -396,21 +399,23 @@ namespace MotoRiders.CR.Controllers
                 HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
                 Response.Cookies.Add(authCookie);
 
+                // Obtener el rol del usuario
+                string rol = ObtenerRolUsuario(email);
+                // Registrar acción de auditoría de inicio de sesión exitoso
+                AuditoriaHelper.RegistrarAccion(email, "Inicio de Sesión Exitoso", "El usuario inició sesión correctamente.");
+
+
+                // Redirigir según el rol del usuario
+                if (rol == "Admin")
+                {
+                    return RedirectToAction("Index", "HomeAnalistaDatos");
+                }
+                else if (rol == "User")
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
                 TempData["Mensaje"] = "¡Inicio de sesión exitoso!";
-               
-            
-
-
-            // Generar y guardar el token
-            string token = TokenGenerator.GenerarTokensSeguridad(10); // Genera un token de 10 caracteres
-                string encryptedToken = EncryptionHelper.Encrypt(token); // Cifrar el token antes de guardarlo
-                GuardarToken(ObtenerIdClientePorEmail(email), encryptedToken, DateTime.Now);
-
-                // Enviar el token por correo electrónico
-                EnviarCorreoRecuperacion2FA(email, token);
-
-                // Redirigir a la vista para verificar el token
-                return RedirectToAction("VerificarToken2FA", new { email = email });
             }
 
             // Incrementar los intentos fallidos y verificar si se ha alcanzado el máximo
@@ -419,16 +424,19 @@ namespace MotoRiders.CR.Controllers
 
             if (intentosRestantes > 0)
             {
+                AuditoriaHelper.RegistrarAccion(email, "Intento de Inicio de Sesión Fallido", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
                 ModelState.AddModelError("", $"El email o la contraseña son incorrectos. Te quedan {intentosRestantes} intentos.");
             }
             else
             {
                 BloquearUsuario(email);
+                AuditoriaHelper.RegistrarAccion(email, "Usuario Bloqueado", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
                 ModelState.AddModelError("", $"El usuario ha sido bloqueado por {TiempoBloqueoMinutos} minutos debido a múltiples intentos fallidos.");
             }
 
             return View();
         }
+
 
         // Método para verificar las credenciales del usuario
         private bool VerificarCredenciales(string email, string contraseña)
@@ -448,6 +456,21 @@ namespace MotoRiders.CR.Controllers
         }
 
 
+        // Método para obtener el rol del usuario por email
+        private string ObtenerRolUsuario(string email)
+        {
+            string query = "SELECT R.nombre FROM Roles R INNER JOIN UsuarioRoles UR ON R.idRol = UR.idRol INNER JOIN Clientes C ON UR.idUsuario = C.idCliente WHERE C.email = @Email";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    string rol = (string)command.ExecuteScalar();
+                    return rol;
+                }
+            }
+        }
 
 
         // Método para verificar si el usuario está bloqueado
@@ -1204,5 +1227,43 @@ namespace MotoRiders.CR.Controllers
                 // Utiliza EncryptionHelper para cifrar la contraseña
                 return EncryptionHelper.Encrypt(password);
             }
+
+
+
+
+
+
+
+        public static class AuditoriaHelper
+        {
+            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+
+            public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
+            {
+                string query = @"
+            INSERT INTO Auditoria (Usuario, Accion, Detalles, FechaHora, IPAddress) 
+            VALUES (@Usuario, @Accion, @Detalles, @FechaHora, @IPAddress)";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Usuario", usuario);
+                        command.Parameters.AddWithValue("@Accion", accion);
+                        command.Parameters.AddWithValue("@Detalles", detalles ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaHora", DateTime.Now);
+                        command.Parameters.AddWithValue("@IPAddress", ipAddress ?? (object)DBNull.Value);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+
+
+
     }
 }
