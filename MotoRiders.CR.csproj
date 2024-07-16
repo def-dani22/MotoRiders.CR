@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AuditoriaController.cs" />
     <Compile Include="Controllers\CarritoCompraController.cs" />
     <Compile Include="Controllers\CarritoController.cs" />
     <Compile Include="Controllers\ContactoController.cs" />
@@ -223,6 +224,7 @@
     <Content Include="Views\Reporte\AccesoDenegado.cshtml" />
     <Content Include="Views\Cuenta\VerificarCorreo.cshtml" />
     <Content Include="Views\HomeAnalistaDatos\MiPerfil.cshtml" />
+    <Content Include="Views\Auditoria\index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
