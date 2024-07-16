@@ -68,11 +68,12 @@ namespace MotoRiders.CR.Controllers
 
 
 
-        
+        // Método para guardar la cotización en la base de datos
         private void GuardarCotizacion(Cotizacion cotizacion, int idCliente)
         {
             string query = "INSERT INTO Cotizaciones (idTipoCotizacion, idCliente, idProducto, estadoCivil, tipoVivienda, tiempoDomicilio, empresaTrabaja, tiempoEmpresa, salarioMensualAproximado, numeroEmpresa) " +
                            "VALUES (@IdTipoCotizacion, @IdCliente, @IdProducto, @EstadoCivil, @TipoVivienda, @TiempoDomicilio, @EmpresaTrabaja, @TiempoEmpresa, @SalarioMensualAproximado, @NumeroEmpresa)";
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -92,7 +93,20 @@ namespace MotoRiders.CR.Controllers
                     command.ExecuteNonQuery();
                 }
             }
+
+            // Registrar auditoría de guardado de cotización
+            try
+            {
+                string descripcion = $"Se ha registrado una nueva cotización para el cliente con ID {idCliente}.";
+                AuditoriaHelper.RegistrarAccion("Sistema", "Guardar Cotización", descripcion);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al registrar auditoría de guardado de cotización.", ex);
+            }
         }
+
 
 
 
@@ -189,6 +203,33 @@ namespace MotoRiders.CR.Controllers
                 new SelectListItem { Value = "Casa de campo (Cottage)", Text = "Casa de campo (Cottage)" }
             };
             return lista;
+        }
+
+        public static class AuditoriaHelper
+        {
+            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+
+            public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
+            {
+                string query = @"
+            INSERT INTO Auditoria (Usuario, Accion, Detalles, FechaHora, IPAddress) 
+            VALUES (@Usuario, @Accion, @Detalles, @FechaHora, @IPAddress)";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Usuario", usuario);
+                        command.Parameters.AddWithValue("@Accion", accion);
+                        command.Parameters.AddWithValue("@Detalles", detalles ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaHora", DateTime.Now);
+                        command.Parameters.AddWithValue("@IPAddress", ipAddress ?? (object)DBNull.Value);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
         }
     }
 }

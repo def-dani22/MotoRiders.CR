@@ -203,9 +203,7 @@ namespace MotoRiders.CR.Controllers
             return count > 0;
         }
     }
-}
-
-        // Método para guardar los datos de la compra en una tabla de registro
+        }// Método para guardar los datos de la compra en una tabla de registro
         private void GuardarRegistroCompra(int idOrden, int clienteId)
         {
             string insertQuery = "INSERT INTO RegistroCompras (idOrden, idCliente, fechaCompra) " +
@@ -222,7 +220,21 @@ namespace MotoRiders.CR.Controllers
                     command.ExecuteNonQuery();
                 }
             }
+
+            // Registrar auditoría de guardado de registro de compra
+            try
+            {
+                string descripcion = $"Se ha registrado una nueva compra para el cliente con ID {clienteId}, orden ID {idOrden}.";
+                AuditoriaHelper.RegistrarAccion("Sistema", "Guardar Registro de Compra", descripcion);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al registrar auditoría de guardado de registro de compra.", ex);
+            }
         }
+
+
 
         // Método para actualizar el estado de la orden
         private void ActualizarEstadoOrden(int idOrden, string nuevoEstado)
@@ -456,5 +468,35 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
+
+
+        public static class AuditoriaHelper
+        {
+            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+
+            public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
+            {
+                string query = @"
+            INSERT INTO Auditoria (Usuario, Accion, Detalles, FechaHora, IPAddress) 
+            VALUES (@Usuario, @Accion, @Detalles, @FechaHora, @IPAddress)";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Usuario", usuario);
+                        command.Parameters.AddWithValue("@Accion", accion);
+                        command.Parameters.AddWithValue("@Detalles", detalles ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaHora", DateTime.Now);
+                        command.Parameters.AddWithValue("@IPAddress", ipAddress ?? (object)DBNull.Value);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
     }
 }

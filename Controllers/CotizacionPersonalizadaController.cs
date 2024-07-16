@@ -97,6 +97,17 @@ namespace MotoRiders.CR.Controllers
                     command.ExecuteNonQuery();
                 }
             }
+            // Registrar auditoría de guardado de cotización
+            try
+            {
+                string descripcion = $"Se ha registrado una nueva cotización para el cliente con ID {idCliente}.";
+                AuditoriaHelper.RegistrarAccion("Sistema", "Guardar Cotización", descripcion);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al registrar auditoría de guardado de cotización.", ex);
+            }
         }
 
         // Método para obtener la lista de tipos de cotización desde la base de datos
@@ -176,5 +187,37 @@ namespace MotoRiders.CR.Controllers
             };
             return lista;
         }
+
+
+        public static class AuditoriaHelper
+        {
+            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+
+            public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
+            {
+                string query = @"
+            INSERT INTO Auditoria (Usuario, Accion, Detalles, FechaHora, IPAddress) 
+            VALUES (@Usuario, @Accion, @Detalles, @FechaHora, @IPAddress)";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Usuario", usuario);
+                        command.Parameters.AddWithValue("@Accion", accion);
+                        command.Parameters.AddWithValue("@Detalles", detalles ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaHora", DateTime.Now);
+                        command.Parameters.AddWithValue("@IPAddress", ipAddress ?? (object)DBNull.Value);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+
+
     }
 }

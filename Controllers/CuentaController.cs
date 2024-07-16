@@ -513,6 +513,17 @@ namespace MotoRiders.CR.Controllers
                 // Enviar el token por correo electrónico
                 EnviarCorreoRecuperacion2FA(email, token);
 
+                // Registrar auditoría de inicio de sesión exitoso
+                try
+                {
+                    AuditoriaHelper.RegistrarAccion(email, "Inicio de Sesión Exitoso", $"El usuario inició sesión correctamente el {DateTime.Now}.");
+                }
+                catch (Exception ex)
+                {
+                    // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                    throw new Exception("Error al registrar auditoría de inicio de sesión exitoso.", ex);
+                }
+
                 // Redirigir a la vista para verificar el token
                 return RedirectToAction("VerificarToken2FA", new { email = email });
             }
@@ -607,6 +618,7 @@ namespace MotoRiders.CR.Controllers
         {
             DateTime fechaDesbloqueo = DateTime.Now.AddMinutes(TiempoBloqueoMinutos);
             string query = "UPDATE Clientes SET tiempoBloqueo = @tiempoBloqueo WHERE email = @Email";
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -617,7 +629,19 @@ namespace MotoRiders.CR.Controllers
                     command.ExecuteNonQuery();
                 }
             }
+
+            try
+            {
+                // Registrar la acción de bloqueo en la tabla de auditoría
+                AuditoriaHelper.RegistrarAccion(email, "Bloqueo de Usuario", "El usuario fue bloqueado debido a múltiples intentos fallidos.");
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al registrar auditoría para el bloqueo de usuario.", ex);
+            }
         }
+
 
         // Método para incrementar los intentos fallidos
         private void IncrementarIntentosFallidos(string email)
@@ -732,12 +756,31 @@ namespace MotoRiders.CR.Controllers
             return RedirectToAction("InicioSesion", "Cuenta");
         }
 
+
         [HttpPost]
         public ActionResult CerrarSesion()
         {
-            FormsAuthentication.SignOut();
+            try
+            {
+                // Obtener el email del usuario autenticado
+                string email = User.Identity.Name;
+                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
+
+                // Registrar acción de auditoría para el cierre de sesión
+                AuditoriaHelper.RegistrarAccion(email, "Cierre de Sesión", "El usuario cerró sesión.", ipAddress);
+
+                // Cerrar sesión
+                FormsAuthentication.SignOut();
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al cerrar sesión.", ex);
+            }
+
             return RedirectToAction("InicioSesion", "Cuenta");
         }
+
 
 
 
@@ -850,17 +893,6 @@ namespace MotoRiders.CR.Controllers
                 return new string(chars);
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1002,33 +1034,6 @@ namespace MotoRiders.CR.Controllers
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // GET: Cuenta/OlvideMiContrasena
         public ActionResult OlvideMiContrasena()
         {
@@ -1158,26 +1163,37 @@ namespace MotoRiders.CR.Controllers
         }
 
 
-
-
         private void ActualizarContrasena(string email, string newPassword)
         {
             string query = "UPDATE Clientes SET contraseña = @NuevaContrasena WHERE email = @Email";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@NuevaContrasena", EncryptionHelper.Encrypt(newPassword)); // Asegúrate de cifrar la nueva contraseña
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Email", email);
+                        command.Parameters.AddWithValue("@NuevaContrasena", EncryptionHelper.Encrypt(newPassword)); // Asegúrate de cifrar la nueva contraseña
 
-                    connection.Open();
-                    command.ExecuteNonQuery();
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
                 }
-            }
 
-            // Marcar el token como usado
-            MarcarTokenComoUsado(email);
+                // Marcar el token como usado
+                MarcarTokenComoUsado(email);
+
+                // Registrar acción de auditoría para la actualización de contraseña
+                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
+                AuditoriaHelper.RegistrarAccion(email, "Actualización de Contraseña", "Se actualizó la contraseña del usuario.", ipAddress);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al actualizar la contraseña.", ex);
+            }
         }
+
 
         private void MarcarTokenComoUsado(string email)
         {
@@ -1241,7 +1257,6 @@ namespace MotoRiders.CR.Controllers
         }
 
 
-
         private void EnviarCorreoRecuperacion(string email, string token)
         {
             string remitente = "estebangomez1015@gmail.com";
@@ -1249,28 +1264,30 @@ namespace MotoRiders.CR.Controllers
             string asunto = "Recuperación de contraseña";
             string cuerpo = $"Para recuperar su contraseña, use el siguiente token: {token}";
 
-            using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
+            try
             {
-                clienteSmtp.EnableSsl = true;
-                clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
-
-                using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    mensaje.IsBodyHtml = true;
-                    clienteSmtp.Send(mensaje);
+                    clienteSmtp.EnableSsl = true;
+                    clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
+
+                    using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                    {
+                        mensaje.IsBodyHtml = true;
+                        clienteSmtp.Send(mensaje);
+                    }
                 }
+
+                // Registrar acción de auditoría para el envío de correo de recuperación de contraseña
+                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
+                AuditoriaHelper.RegistrarAccion(email, "Correo de Recuperación de Contraseña Enviado", $"Se envió un correo de recuperación de contraseña con el token: {token}", ipAddress);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al enviar el correo de recuperación de contraseña.", ex);
             }
         }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1282,24 +1299,36 @@ namespace MotoRiders.CR.Controllers
             string asunto = "Doble factor de autenticación";
             string cuerpo = $"Para confirmar el inicio de sesión, ingrese el siguiente código: {token}";
 
-            using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
+            try
             {
-                clienteSmtp.EnableSsl = true;
-                clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
-
-                using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    mensaje.IsBodyHtml = true;
-                    clienteSmtp.Send(mensaje);
+                    clienteSmtp.EnableSsl = true;
+                    clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
+
+                    using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                    {
+                        mensaje.IsBodyHtml = true;
+                        clienteSmtp.Send(mensaje);
+                    }
                 }
+
+                // Registrar acción de auditoría para el envío de correo de recuperación 2FA
+                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
+                AuditoriaHelper.RegistrarAccion(email, "Correo de Recuperación 2FA Enviado", $"Se envió un correo de recuperación 2FA con el token: {token}", ipAddress);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al enviar el correo de recuperación 2FA.", ex);
             }
         }
 
 
 
 
-        //verificartoken2FA
 
+        //verificartoken2FA
 
 
         private void EnviarCorreoVerificacion(string email, string token)
@@ -1309,19 +1338,30 @@ namespace MotoRiders.CR.Controllers
             string asunto = "Confirmar Registro";
             string cuerpo = $"Para registrarse en MotoRiders, ingrese el siguiente código: {token}";
 
-            using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
+            try
             {
-                clienteSmtp.EnableSsl = true;
-                clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
-
-                using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    mensaje.IsBodyHtml = true;
-                    clienteSmtp.Send(mensaje);
+                    clienteSmtp.EnableSsl = true;
+                    clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
+
+                    using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                    {
+                        mensaje.IsBodyHtml = true;
+                        clienteSmtp.Send(mensaje);
+                    }
                 }
+
+                // Registrar acción de auditoría para el envío de correo de verificación
+                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
+                AuditoriaHelper.RegistrarAccion(email, "Correo de Verificación Enviado", $"Se envió un correo de verificación con el token: {token}", ipAddress);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                throw new Exception("Error al enviar el correo de verificación.", ex);
             }
         }
-
 
 
 
@@ -1366,10 +1406,5 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
-
-
-
-
-
     }
 }
