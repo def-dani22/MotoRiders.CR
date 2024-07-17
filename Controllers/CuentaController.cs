@@ -1297,7 +1297,7 @@ namespace MotoRiders.CR.Controllers
             }
             catch (Exception ex)
             {
-                // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                // Manejar la excepción adecuadamente (log, mens  aje al usuario, etc.)
                 throw new Exception("Error al enviar el correo de verificación.", ex);
             }
         }
