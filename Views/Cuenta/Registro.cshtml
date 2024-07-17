@@ -89,6 +89,13 @@
                         <div class="col-md-10">
                             @Html.PasswordFor(m => m.contraseña, new { @class = "form-control", required = "required" })
                             @Html.ValidationMessageFor(m => m.contraseña, "", new { @class = "text-danger" })
+                            <ul id="password-requirements">
+                                <li id="length" class="invalid">Entre 14 y 20 caracteres</li>
+                                <li id="lowercase" class="invalid">Al menos una letra minúscula</li>
+                                <li id="uppercase" class="invalid">Al menos una letra mayúscula</li>
+                                <li id="digit" class="invalid">Al menos un dígito</li>
+                                <li id="special" class="invalid">Al menos un carácter especial</li>
+                            </ul>
                         </div>
                     </div>
 

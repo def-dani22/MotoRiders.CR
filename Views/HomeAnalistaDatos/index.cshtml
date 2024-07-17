@@ -74,6 +74,16 @@
         </div>
     </nav>
 
+
+
+
+    <div class="background-container">
+        <div>
+            <h1>Bienvenido Administrador de datos</h1>
+        </div>
+    </div>
+
+
     <!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -105,57 +115,73 @@
 
 </body>
 </html>
+<style>
+    .background-container {
+        background-image: url('https://i.pinimg.com/736x/95/71/10/957110eac8de4e1736f00df5636b0a4f.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+    }
+</style>
 
 <style>
-        .navigation-card {
-            width: fit-content;
-            height: fit-content;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 30px;
-            background-color: rgb(255, 255, 255);
-            padding: 15px 20px;
-            border-radius: 50px;
+    .navigation-card {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+        background-color: rgb(255, 255, 255);
+        padding: 15px 20px;
+        border-radius: 50px;
+    }
+
+    .tab1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        background-color: rgb(252, 252, 252);
+        padding: 15px;
+        border-radius: 50%;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+        .tab1:hover {
+            background-color: rgb(227, 223, 223);
         }
 
-        .tab1 {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            overflow: hidden;
-            background-color: rgb(252, 252, 252);
-            padding: 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
+    .floating-buttons1 {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        z-index: 1000;
+    }
 
-            .tab1:hover {
-                background-color: rgb(227, 223, 223);
-            }
-
-        .floating-buttons1 {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .tab1 {
-            width: 40px;
-            height: 40px;
-            padding: 10px;
-        }
+    .tab1 {
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+    }
 
 
-        /*
+    /*
     redes sociales*/
 
 
@@ -311,6 +337,4 @@
     .Btn:active {
         transform: translate(2px,2px);
     }
-
-
 </style>

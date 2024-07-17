@@ -21,10 +21,6 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
-
-
-
-
         [HttpPost]
         public ActionResult Registro(ClienteModel cliente)
         {
@@ -76,29 +72,6 @@ namespace MotoRiders.CR.Controllers
             return View(cliente);
         }
 
-
-
-
-        //[HttpPost]
-        //public ActionResult Registro(ClienteModel cliente)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (EmailRegistrado(cliente.email))
-        //        {
-        //            ModelState.AddModelError("Email", "Este correo ya está registrado.");
-        //            return View(cliente);
-        //        }
-
-        //        cliente.contraseña = EncryptionHelper.Encrypt(cliente.contraseña);
-        //        InsertarCliente(cliente);
-
-        //        return RedirectToAction("InicioSesion", "Cuenta");
-        //    }
-
-        //    return View(cliente);
-        //}
-
         public ActionResult ResponderPreguntaSeguridad()
         {
             if (TempData["Email"] == null)
@@ -112,7 +85,8 @@ namespace MotoRiders.CR.Controllers
             // Seleccionar aleatoriamente entre PreguntaSeguridad1 y PreguntaSeguridad2
             string preguntaSeleccionada;
             string pregunta;
-            if (new Random().Next(2) == 0)
+            var random = new Random();
+            if (random.Next(2) == 0)
             {
                 pregunta = ObtenerPreguntaSeguridad1(idCliente);
                 preguntaSeleccionada = "RespuestaSeguridad1";
@@ -250,7 +224,6 @@ namespace MotoRiders.CR.Controllers
 
             return respuesta;
         }
-
 
         private bool EmailRegistrado(string email)
         {
@@ -926,11 +899,6 @@ namespace MotoRiders.CR.Controllers
 
 
 
-
-
-
-
-
         public ActionResult VerificarToken2FA()
         {
             return View();
@@ -974,12 +942,6 @@ namespace MotoRiders.CR.Controllers
                 return View();
             }
         }
-
-
-
-
-
-
 
         public ActionResult VerificarCorreo()
         {
@@ -1032,8 +994,6 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
-
-
         // GET: Cuenta/OlvideMiContrasena
         public ActionResult OlvideMiContrasena()
         {
@@ -1072,7 +1032,6 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
-        
         private int ObtenerIdClientePorEmail(string email)
         {
             string query = "SELECT idCliente FROM Clientes WHERE email = @Email";
@@ -1093,7 +1052,6 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-
         public ActionResult RecuperarContrasena()
         {
             if (TempData["Token"] == null)
@@ -1104,8 +1062,6 @@ namespace MotoRiders.CR.Controllers
             ViewBag.Token = TempData["Token"].ToString();
             return View();
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1143,8 +1099,6 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
-
-
         private bool EsContrasenaValida(string contraseña)
         {
             // La contraseña debe tener entre 14 y 20 caracteres
@@ -1161,7 +1115,6 @@ namespace MotoRiders.CR.Controllers
 
             return tieneMinuscula && tieneMayuscula && tieneDigito && tieneCaracterEspecial;
         }
-
 
         private void ActualizarContrasena(string email, string newPassword)
         {
@@ -1194,7 +1147,6 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-
         private void MarcarTokenComoUsado(string email)
         {
             string query = "UPDATE Tokens SET Estado = 1 WHERE IdCliente = (SELECT idCliente FROM Clientes WHERE email = @Email) AND Estado = 0";
@@ -1207,10 +1159,8 @@ namespace MotoRiders.CR.Controllers
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-            }
+            } 
         }
-
-
 
         private void GuardarToken(int idCliente, string token, DateTime fechaCreacion)
         {
@@ -1228,7 +1178,6 @@ namespace MotoRiders.CR.Controllers
                 }
             }
         }
-
 
         private string ObtenerEmailDesdeToken(string token)
         {
@@ -1255,7 +1204,6 @@ namespace MotoRiders.CR.Controllers
             }
             return null;
         }
-
 
         private void EnviarCorreoRecuperacion(string email, string token)
         {
@@ -1289,9 +1237,6 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-
-
-
         private void EnviarCorreoRecuperacion2FA(string email, string token)
         {
             string remitente = "estebangomez1015@gmail.com";
@@ -1324,13 +1269,7 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-
-
-
-
         //verificartoken2FA
-
-
         private void EnviarCorreoVerificacion(string email, string token)
         {
             string remitente = "estebangomez1015@gmail.com";
@@ -1363,22 +1302,11 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-
-
-
-
-
         private string EncryptPassword(string password)
             {
                 // Utiliza EncryptionHelper para cifrar la contraseña
                 return EncryptionHelper.Encrypt(password);
             }
-
-
-
-
-
-
 
         public static class AuditoriaHelper
         {
