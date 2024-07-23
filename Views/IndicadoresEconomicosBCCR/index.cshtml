@@ -1,0 +1,51 @@
+﻿@model List<MotoRiders.CR.Models.TipoCambioDolarModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Indicadores Económicos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Indicadores Económicos</h2>
+        @if (ViewBag.Error != null)
+        {
+            <p style="color:red;">@ViewBag.Error</p>
+        }
+        else if (Model != null && Model.Any())
+        {
+            <table>
+                <tr>
+                    <th>Valor</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Valor</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <p>No hay datos disponibles.</p>
+        }
+    </div>
+</body>
+</html>

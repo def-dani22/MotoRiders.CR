@@ -1,14 +1,15 @@
 ﻿using MotoRiders.CR.Models;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Net.Mail;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Mail;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Security.Cryptography;
-using System.IO;
-using System.Linq;
 
 namespace MotoRiders.CR.Controllers
 {
@@ -16,8 +17,106 @@ namespace MotoRiders.CR.Controllers
     {
         private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
 
+        [HttpGet]
+        public JsonResult ObtenerProvincias(int idPais)
+        {
+            List<SelectListItem> provincias = new List<SelectListItem>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT idProvincia, nombre FROM Provincia WHERE idPais = @idPais", conn);
+                cmd.Parameters.AddWithValue("@idPais", idPais);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    provincias.Add(new SelectListItem
+                    {
+                        Value = reader["idProvincia"].ToString(),
+                        Text = reader["nombre"].ToString()
+                    });
+                }
+            }
+
+            return Json(provincias, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerCantones(int idProvincia)
+        {
+            List<SelectListItem> cantones = new List<SelectListItem>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT idCanton, nombre FROM Canton WHERE idProvincia = @idProvincia", conn);
+                cmd.Parameters.AddWithValue("@idProvincia", idProvincia);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    cantones.Add(new SelectListItem
+                    {
+                        Value = reader["idCanton"].ToString(),
+                        Text = reader["nombre"].ToString()
+                    });
+                }
+            }
+
+            return Json(cantones, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ObtenerDistritos(int idCanton)
+        {
+            List<SelectListItem> distritos = new List<SelectListItem>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT idDistrito, nombre FROM Distrito WHERE idCanton = @idCanton", conn);
+                cmd.Parameters.AddWithValue("@idCanton", idCanton);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    distritos.Add(new SelectListItem
+                    {
+                        Value = reader["idDistrito"].ToString(),
+                        Text = reader["nombre"].ToString()
+                    });
+                }
+            }
+
+            return Json(distritos, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Registro()
         {
+            var paises = new List<SelectListItem>();
+            string query = "SELECT idPais, nombre FROM Pais";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            paises.Add(new SelectListItem
+                            {
+                                Value = reader["idPais"].ToString(),
+                                Text = reader["nombre"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.Paises = new SelectList(paises, "Value", "Text");
             return View();
         }
 
@@ -32,12 +131,9 @@ namespace MotoRiders.CR.Controllers
                     return View(cliente);
                 }
 
-
-
                 // Generar y enviar el token de verificación
                 string token = TokenGenerator.GenerarTokensSeguridad(10);
                 string encryptedToken = EncryptionHelper.Encrypt(token);
-                
 
                 try
                 {
@@ -45,7 +141,6 @@ namespace MotoRiders.CR.Controllers
                     EnviarCorreoVerificacion(cliente.email, token);
 
                     // Guardar los datos del cliente temporalmente en TempData
-
                     TempData["Cedula"] = cliente.cedula;
                     TempData["Nombre"] = cliente.nombre;
                     TempData["Direccion"] = cliente.direccion;
@@ -56,8 +151,11 @@ namespace MotoRiders.CR.Controllers
                     TempData["RespuestaSeguridad1"] = cliente.respuestaSeguridad1;
                     TempData["PreguntaSeguridad2"] = cliente.preguntaSeguridad2;
                     TempData["RespuestaSeguridad2"] = cliente.respuestaSeguridad2;
+                    TempData["IdPais"] = cliente.IdPais;
+                    TempData["IdProvincia"] = cliente.idProvincia;
+                    TempData["IdCanton"] = cliente.idCanton;
+                    TempData["IdDistrito"] = cliente.idDistrito;
                     TempData["TokenVerificacion"] = encryptedToken;
-
 
                     // Redirigir a la vista de verificación de correo
                     return RedirectToAction("VerificarCorreo");
@@ -71,6 +169,237 @@ namespace MotoRiders.CR.Controllers
 
             return View(cliente);
         }
+
+
+
+
+
+
+        private bool EmailRegistrado(string email)
+        {
+            string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+        // Método para insertar un nuevo cliente y asignarle el rol "User"
+        private void InsertarCliente(ClienteModel cliente)
+        {
+            string query = @"
+        INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2, idPais, idProvincia, idCanton, idDistrito) 
+        VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2, @IdPais, @IdProvincia, @IdCanton, @IdDistrito);
+        SELECT SCOPE_IDENTITY();
+    ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Cedula", cliente.cedula);
+                        command.Parameters.AddWithValue("@Nombre", cliente.nombre);
+                        command.Parameters.AddWithValue("@Direccion", cliente.direccion);
+                        command.Parameters.AddWithValue("@Telefono", cliente.telefono);
+                        command.Parameters.AddWithValue("@Email", cliente.email);
+                        command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
+                        command.Parameters.AddWithValue("@PreguntaSeguridad1", cliente.preguntaSeguridad1);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
+                        command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
+                        command.Parameters.AddWithValue("@IdPais", cliente.IdPais);
+                        command.Parameters.AddWithValue("@IdProvincia", cliente.idProvincia);
+                        command.Parameters.AddWithValue("@IdCanton", cliente.idCanton);
+                        command.Parameters.AddWithValue("@IdDistrito", cliente.idDistrito);
+
+                        // Ejecutar la inserción y obtener el ID del cliente
+                        int idCliente = Convert.ToInt32(command.ExecuteScalar());
+
+                        // Asignar el rol "User" al nuevo cliente
+                        AsignarRol(idCliente, "User", connection);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
+                    throw new Exception("Error al insertar cliente y obtener ID.", ex);
+                }
+            }
+        }
+
+
+
+        // Método para verificar si el cliente tiene un rol específico
+        private bool ClienteTieneRol(string email, string rolNombre)
+        {
+            string query = @"
+            SELECT COUNT(*) 
+            FROM UsuarioRoles ur 
+            JOIN Clientes c ON ur.idUsuario = c.idCliente 
+            JOIN Roles r ON ur.idRol = r.idRol 
+            WHERE c.email = @Email AND r.nombre = @RolNombre
+        ";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@RolNombre", rolNombre);
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+
+        // Método para asignar un rol específico a un cliente
+        private void AsignarRol(int idCliente, string rolNombre, SqlConnection connection)
+        {
+            string query = @"
+            INSERT INTO UsuarioRoles (idUsuario, idRol) 
+            SELECT @IdCliente, idRol 
+            FROM Roles 
+            WHERE nombre = @RolNombre
+        ";
+
+            using (SqlCommand command = new SqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@IdCliente", idCliente);
+                command.Parameters.AddWithValue("@RolNombre", rolNombre);
+                command.ExecuteNonQuery();
+            }
+        }
+
+
+        public ActionResult VerificarCorreo()
+        {
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public ActionResult VerificarCorreo(string token)
+        {
+            if (TempData["TokenVerificacion"] == null)
+            {
+                return RedirectToAction("Registro");
+            }
+
+            string encryptedToken = TempData["TokenVerificacion"].ToString();
+
+            if (token.Equals(EncryptionHelper.Decrypt(encryptedToken), StringComparison.OrdinalIgnoreCase))
+            {
+                // Token correcto, registrar el cliente
+                try
+                {
+                    ClienteModel clienteTemporal = new ClienteModel
+                    {
+                        cedula = TempData["Cedula"]?.ToString(),
+                        nombre = TempData["Nombre"]?.ToString(),
+                        direccion = TempData["Direccion"]?.ToString(),
+                        telefono = TempData["Telefono"]?.ToString(),
+                        email = TempData["Email"]?.ToString(),
+                        contraseña = EncryptionHelper.Encrypt(TempData["Contraseña"]?.ToString()),
+                        preguntaSeguridad1 = TempData["PreguntaSeguridad1"]?.ToString(),
+                        respuestaSeguridad1 = TempData["RespuestaSeguridad1"]?.ToString(),
+                        preguntaSeguridad2 = TempData["PreguntaSeguridad2"]?.ToString(),
+                        respuestaSeguridad2 = TempData["RespuestaSeguridad2"]?.ToString(),
+                        IdPais = Convert.ToInt32(TempData["IdPais"]),
+                        idProvincia = Convert.ToInt32(TempData["IdProvincia"]),
+                        idCanton = Convert.ToInt32(TempData["IdCanton"]),
+                        idDistrito = Convert.ToInt32(TempData["IdDistrito"])
+                    };
+
+                    InsertarCliente(clienteTemporal);
+                    TempData["Message"] = "Registro exitoso. Ahora puede iniciar sesión.";
+                    return RedirectToAction("InicioSesion", "Cuenta");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Ocurrió un error al registrar el cliente: " + ex.Message);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "El token de verificación es incorrecto.");
+            }
+
+            return View();
+        }
+
+
+
+        //verificartoken2FA
+        private void EnviarCorreoVerificacion(string email, string token)
+        {
+            string remitente = "estebangomez1015@gmail.com";
+            string contraseña = "dzmoqbkgfzfqquwf";
+            string asunto = "Confirmar Registro";
+            string cuerpo = $"Para registrarse en MotoRiders, ingrese el siguiente código: {token}";
+
+            try
+            {
+                using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    clienteSmtp.EnableSsl = true;
+                    clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
+
+                    using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
+                    {
+                        mensaje.IsBodyHtml = true;
+                        clienteSmtp.Send(mensaje);
+                    }
+                }
+
+                // Registrar acción de auditoría para el envío de correo de verificación
+                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
+                AuditoriaHelper.RegistrarAccion(email, "Correo de Verificación Enviado", $"Se envió un correo de verificación con el token: {token}", ipAddress);
+            }
+            catch (Exception ex)
+            {
+                // Manejar la excepción adecuadamente (log, mens  aje al usuario, etc.)
+                throw new Exception("Error al enviar el correo de verificación.", ex);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public ActionResult ResponderPreguntaSeguridad()
         {
@@ -225,116 +554,14 @@ namespace MotoRiders.CR.Controllers
             return respuesta;
         }
 
-        private bool EmailRegistrado(string email)
-        {
-            string query = "SELECT COUNT(*) FROM Clientes WHERE email = @Email";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Email", email);
-                    connection.Open();
-                    int count = (int)command.ExecuteScalar();
-                    return count > 0;
-                }
-            }
-        }
+        //private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
+        //    private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
 
-        // Método para insertar un nuevo cliente y asignarle el rol "User"
-        private void InsertarCliente(ClienteModel cliente)
-        {
-            
-
-            string query = @"
-            INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) 
-            VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2);
-            SELECT SCOPE_IDENTITY();
-        ";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                try
-                {
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Cedula", cliente.cedula);
-                        command.Parameters.AddWithValue("@Nombre", cliente.nombre);
-                        command.Parameters.AddWithValue("@Direccion", cliente.direccion);
-                        command.Parameters.AddWithValue("@Telefono", cliente.telefono);
-                        command.Parameters.AddWithValue("@Email", cliente.email);
-                        command.Parameters.AddWithValue("@Contraseña", cliente.contraseña);
-                        command.Parameters.AddWithValue("@PreguntaSeguridad1", cliente.preguntaSeguridad1);
-                        command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
-                        command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
-                        command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
-
-                        // Ejecutar la inserción y obtener el ID del cliente
-                        int idCliente = Convert.ToInt32(command.ExecuteScalar());
-
-                        // Asignar el rol "User" al nuevo cliente
-                        AsignarRol(idCliente, "User", connection);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Manejar la excepción adecuadamente (log, mensaje al usuario, etc.)
-                    throw new Exception("Error al insertar cliente y obtener ID.", ex);
-                }
-            }
-        }
-
-        // Método para verificar si el cliente tiene un rol específico
-        private bool ClienteTieneRol(string email, string rolNombre)
-        {
-            string query = @"
-            SELECT COUNT(*) 
-            FROM UsuarioRoles ur 
-            JOIN Clientes c ON ur.idUsuario = c.idCliente 
-            JOIN Roles r ON ur.idRol = r.idRol 
-            WHERE c.email = @Email AND r.nombre = @RolNombre
-        ";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@Email", email);
-                    command.Parameters.AddWithValue("@RolNombre", rolNombre);
-                    connection.Open();
-                    int count = (int)command.ExecuteScalar();
-                    return count > 0;
-                }
-            }
-        }
-
-        // Método para asignar un rol específico a un cliente
-        private void AsignarRol(int idCliente, string rolNombre, SqlConnection connection)
-        {
-            string query = @"
-            INSERT INTO UsuarioRoles (idUsuario, idRol) 
-            SELECT @IdCliente, idRol 
-            FROM Roles 
-            WHERE nombre = @RolNombre
-        ";
-
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@IdCliente", idCliente);
-                command.Parameters.AddWithValue("@RolNombre", rolNombre);
-                command.ExecuteNonQuery();
-            }
-        }
-    
-
-    //private const int MaxIntentosFallidos = 3; // Máximo de intentos fallidos permitidos
-    //    private const int TiempoBloqueoMinutos = 2; // Tiempo de bloqueo en minutos
-
-    //    // Método para mostrar la vista de inicio de sesión
-    //    public ActionResult InicioSesion()
-    //    {
-    //        return View();
-    //    }
+        //    // Método para mostrar la vista de inicio de sesión
+        //    public ActionResult InicioSesion()
+        //    {
+        //        return View();
+        //    }
 
         //// Método para procesar el inicio de sesión
         //[HttpPost]
@@ -943,56 +1170,7 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-        public ActionResult VerificarCorreo()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        public ActionResult VerificarCorreo(string token)
-        {
-            if (TempData["TokenVerificacion"] == null)
-            {
-                return RedirectToAction("Registro");
-            }
-
-            string encryptedToken = TempData["TokenVerificacion"].ToString();
-
-            if (token.Equals(EncryptionHelper.Decrypt(encryptedToken), StringComparison.OrdinalIgnoreCase))
-            {
-                // Token correcto, registrar el cliente
-                try
-                {
-                    ClienteModel clienteTemporal = new ClienteModel
-                    {
-                        cedula = TempData["Cedula"].ToString(),
-                        nombre = TempData["Nombre"].ToString(),
-                        direccion = TempData["Direccion"].ToString(),
-                        telefono = TempData["Telefono"].ToString(),
-                        email = TempData["Email"].ToString(),
-                        contraseña = EncryptionHelper.Encrypt(TempData["Contraseña"].ToString()),
-                        preguntaSeguridad1 = TempData["PreguntaSeguridad1"].ToString(),
-                        respuestaSeguridad1 = TempData["RespuestaSeguridad1"].ToString(),
-                        preguntaSeguridad2 = TempData["PreguntaSeguridad2"].ToString(),
-                        respuestaSeguridad2 = TempData["RespuestaSeguridad2"].ToString()
-                    };
-
-                    InsertarCliente(clienteTemporal);
-                    TempData["Message"] = "Registro exitoso. Ahora puede iniciar sesión.";
-                    return RedirectToAction("InicioSesion", "Cuenta");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Ocurrió un error al registrar el cliente: " + ex.Message);
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("", "El token de verificación es incorrecto.");
-            }
-
-            return View();
-        }
 
         // GET: Cuenta/OlvideMiContrasena
         public ActionResult OlvideMiContrasena()
@@ -1159,7 +1337,7 @@ namespace MotoRiders.CR.Controllers
                     connection.Open();
                     command.ExecuteNonQuery();
                 }
-            } 
+            }
         }
 
         private void GuardarToken(int idCliente, string token, DateTime fechaCreacion)
@@ -1269,44 +1447,12 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-        //verificartoken2FA
-        private void EnviarCorreoVerificacion(string email, string token)
-        {
-            string remitente = "estebangomez1015@gmail.com";
-            string contraseña = "dzmoqbkgfzfqquwf";
-            string asunto = "Confirmar Registro";
-            string cuerpo = $"Para registrarse en MotoRiders, ingrese el siguiente código: {token}";
-
-            try
-            {
-                using (SmtpClient clienteSmtp = new SmtpClient("smtp.gmail.com", 587))
-                {
-                    clienteSmtp.EnableSsl = true;
-                    clienteSmtp.Credentials = new NetworkCredential(remitente, contraseña);
-
-                    using (MailMessage mensaje = new MailMessage(remitente, email, asunto, cuerpo))
-                    {
-                        mensaje.IsBodyHtml = true;
-                        clienteSmtp.Send(mensaje);
-                    }
-                }
-
-                // Registrar acción de auditoría para el envío de correo de verificación
-                string ipAddress = Request.UserHostAddress; // Obtener la IP del usuario
-                AuditoriaHelper.RegistrarAccion(email, "Correo de Verificación Enviado", $"Se envió un correo de verificación con el token: {token}", ipAddress);
-            }
-            catch (Exception ex)
-            {
-                // Manejar la excepción adecuadamente (log, mens  aje al usuario, etc.)
-                throw new Exception("Error al enviar el correo de verificación.", ex);
-            }
-        }
 
         private string EncryptPassword(string password)
-            {
-                // Utiliza EncryptionHelper para cifrar la contraseña
-                return EncryptionHelper.Encrypt(password);
-            }
+        {
+            // Utiliza EncryptionHelper para cifrar la contraseña
+            return EncryptionHelper.Encrypt(password);
+        }
 
         public static class AuditoriaHelper
         {

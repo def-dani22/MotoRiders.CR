@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MotoRiders.CR.Controllers
@@ -57,7 +55,7 @@ namespace MotoRiders.CR.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Ocurrió un error al procesar su solicitud. Por favor, inténtelo de nuevo más tarde.";
-                ViewBag.ExceptionMessage = ex.Message; 
+                ViewBag.ExceptionMessage = ex.Message;
                 ViewBag.TipoCotizacionList = ObtenerListaTipoCotizacion();
                 ViewBag.ProductoList = ObtenerListaProductos();
                 ViewBag.EstadoCivilList = ObtenerListaEstadoCivil();

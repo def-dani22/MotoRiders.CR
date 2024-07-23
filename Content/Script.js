@@ -31,28 +31,28 @@ function agregarAlCarrito() {
 }
 
 
-    document.getElementById('btnCerrarSesion').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
+document.getElementById('btnCerrarSesion').addEventListener('click', function (event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
 
     fetch(this.getAttribute('href'), {
         method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-            },
-    body: JSON.stringify({ }), // Puedes enviar datos en el cuerpo si es necesario
-        })
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}), // Puedes enviar datos en el cuerpo si es necesario
+    })
         .then(response => {
             if (response.ok) {
-        window.location.href = '@Url.Action("InicioSesion", "Cuenta")'; // Redirigir al inicio de sesión
+                window.location.href = '@Url.Action("InicioSesion", "Cuenta")'; // Redirigir al inicio de sesión
             } else {
-        // Manejar errores si es necesario
-        console.error('Error al cerrar sesión');
+                // Manejar errores si es necesario
+                console.error('Error al cerrar sesión');
             }
         })
         .catch(error => {
-        console.error('Error en la solicitud:', error);
+            console.error('Error en la solicitud:', error);
         });
-    });
+});
 
 
 
@@ -99,3 +99,5 @@ $(document).ready(function () {
         }
     });
 });
+
+

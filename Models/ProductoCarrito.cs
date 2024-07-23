@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotoRiders.CR.Models
@@ -23,6 +19,6 @@ namespace MotoRiders.CR.Models
         public virtual Producto Producto { get; set; }
 
         public int Cantidad { get; set; }
-        
+
     }
 }

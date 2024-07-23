@@ -1,11 +1,9 @@
-﻿using System;
+﻿using MotoRiders.CR.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
-using MotoRiders.CR.Models;
 
 namespace MotoRiders.CR.Controllers
 {
@@ -154,7 +152,7 @@ namespace MotoRiders.CR.Controllers
 
 
             TempData["SuccessMessage"] = "Su Compra se ha realizado con éxito. Pronto le llegara un correo con más información de la compra.";
-            
+
             return RedirectToAction("Confirmacion");
         }
 
@@ -179,30 +177,30 @@ namespace MotoRiders.CR.Controllers
 
         // Método para validar los datos de la tarjeta con los datos existentes en la base de datos
         private bool ValidarDatosTarjeta(CarritoCompra carritoCompra)
-{
-    string query = "SELECT COUNT(*) FROM Pagos WHERE " +
-                   "numeroTarjeta = @NumeroTarjeta " +
-                   "AND cvv = @CVV " +
-                   "AND nombreTarjeta = @NombreTarjeta " +
-                   "AND fechaExpiracion = @FechaExpiracion " +
-                   "AND numeroCuenta = @NumeroCuenta"; // Añadimos número de cuenta
-
-    using (SqlConnection connection = new SqlConnection(connectionString))
-    {
-        using (SqlCommand command = new SqlCommand(query, connection))
         {
-            command.Parameters.AddWithValue("@NumeroTarjeta", carritoCompra.NumeroTarjeta);
-            command.Parameters.AddWithValue("@CVV", carritoCompra.CVV);
-            command.Parameters.AddWithValue("@NombreTarjeta", carritoCompra.NombreTarjeta);
-            command.Parameters.AddWithValue("@FechaExpiracion", carritoCompra.FechaExpiracion);
-            command.Parameters.AddWithValue("@NumeroCuenta", carritoCompra.NumeroCuenta); // Añadimos número de cuenta
+            string query = "SELECT COUNT(*) FROM Pagos WHERE " +
+                           "numeroTarjeta = @NumeroTarjeta " +
+                           "AND cvv = @CVV " +
+                           "AND nombreTarjeta = @NombreTarjeta " +
+                           "AND fechaExpiracion = @FechaExpiracion " +
+                           "AND numeroCuenta = @NumeroCuenta"; // Añadimos número de cuenta
 
-            connection.Open();
-            int count = (int)command.ExecuteScalar();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@NumeroTarjeta", carritoCompra.NumeroTarjeta);
+                    command.Parameters.AddWithValue("@CVV", carritoCompra.CVV);
+                    command.Parameters.AddWithValue("@NombreTarjeta", carritoCompra.NombreTarjeta);
+                    command.Parameters.AddWithValue("@FechaExpiracion", carritoCompra.FechaExpiracion);
+                    command.Parameters.AddWithValue("@NumeroCuenta", carritoCompra.NumeroCuenta); // Añadimos número de cuenta
 
-            return count > 0;
-        }
-    }
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar();
+
+                    return count > 0;
+                }
+            }
         }// Método para guardar los datos de la compra en una tabla de registro
         private void GuardarRegistroCompra(int idOrden, int clienteId)
         {

@@ -1,7 +1,5 @@
-﻿@model MotoRiders.CR.Models.ClienteModel
-
-@{
-    ViewBag.Title = "Inicio de Sesión";
+﻿@{
+    ViewBag.Title = "Confirmación de Registro";
     Layout = null;
 }
 
@@ -31,39 +29,31 @@
             <span class="logo-text">MotoRiders</span>
         </div>
     </nav>
+    <h2>Confirmación de Registro</h2>
 
-    <div class="container containerL">
-        <div class="row">
-            <div class="col-md-6 offset-md-3 form-containerL">
-                <h2 class="text-center">Inicio de Sesión</h2>
-
-                @using (Html.BeginForm("InicioSesion", "Cuenta", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
-                {
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                    <div class="form-groupL">
-                        @Html.LabelFor(m => m.email)
-                        @Html.TextBoxFor(m => m.email, new { @class = "form-control", required = "required" })
-                        @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger" })
-                    </div>
-
-                    <div class="form-groupL">
-                        @Html.LabelFor(m => m.contraseña)
-                        @Html.PasswordFor(m => m.contraseña, new { @class = "form-control", required = "required" })
-                        @Html.ValidationMessageFor(m => m.contraseña, "", new { @class = "text-danger" })
-                    </div>
-
-
-
-                    <button type="submit" class="btn btn-primary btn-block btn-iniciarL">Iniciar Sesión</button>
-                }
-
-                <br />
-                <p class="text-center">¿No tienes cuenta aún? <a href="@Url.Action("Registro", "Cuenta")" class="registro-linkL">Registrarse</a></p>
-                <p class="text-center">¿Olvidaste la contraseña? <a href="@Url.Action("OlvideMiContrasena", "Cuenta")" class="registro-linkL">Recuperar</a></p>
-            </div>
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.SuccessMessage
         </div>
+    }
+
+    <p>Bienvenido a MotoRiders, usted se ha registrado exitosamentê!!!</p>
+
+
+    <div>
+        @Html.ActionLink("Volver al inicio de sesión", "InicioSesion", "Cuenta", new { }, new { @class = "btn btn-primary btn-custom" })
     </div>
+
+    <div class="space-before-footer"></div>
+
+
+    <!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Enlace al archivo JavaScript personalizado -->
+    <script src="script.js"></script>
+
 
 
 
@@ -140,6 +130,28 @@
 </html>
 
 <style>
+    /* Archivo CSS (por ejemplo, styles.css) */
+    .space-before-footer {
+        height: 50px; /* Ajusta la altura según el espacio deseado */
+    }
+
+    /* Archivo CSS (por ejemplo, styles.css) */
+    .btn-custom {
+        background-color: #007bff; /* Color de fondo */
+        color: white; /* Color del texto */
+        padding: 10px 20px; /* Relleno */
+        border: none; /* Sin borde */
+        border-radius: 5px; /* Bordes redondeados */
+        text-decoration: none; /* Sin subrayado */
+        font-size: 16px; /* Tamaño de fuente */
+        cursor: pointer; /* Cursor de puntero */
+        transition: background-color 0.3s ease; /* Transición suave para el color de fondo */
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3; /* Color de fondo al pasar el ratón */
+        }
+
     .navigation-card {
         width: fit-content;
         height: fit-content;
