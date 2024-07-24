@@ -67,6 +67,7 @@ namespace MotoRiders.CR.Controllers
             return Json(cantones, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpGet]
         public JsonResult ObtenerDistritos(int idCanton)
         {
@@ -330,7 +331,8 @@ namespace MotoRiders.CR.Controllers
 
                     InsertarCliente(clienteTemporal);
                     TempData["Message"] = "Registro exitoso. Ahora puede iniciar sesión.";
-                    return RedirectToAction("InicioSesion", "Cuenta");
+                    //return RedirectToAction("InicioSesion", "Cuenta");
+                    return RedirectToAction("Confirmacion");
                 }
                 catch (Exception ex)
                 {
@@ -345,6 +347,13 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
+
+
+        public ActionResult Confirmacion()
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            return View();
+        }
 
 
         //verificartoken2FA
