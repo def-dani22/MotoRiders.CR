@@ -18,6 +18,7 @@
                             <th>WhatsApp</th>
                             <th>Correo</th>
                             <th>Dirección</th>
+                            <th>Ver en Mapa</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +31,9 @@
                                 <td>@contacto.Whatsapp</td>
                                 <td>@contacto.Correo</td>
                                 <td>@contacto.Direccion</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="mostrarEnMapa(@contacto.Latitude, @contacto.Longitude, '@contacto.Provincia')">Ver en el Mapa</button>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -48,6 +52,7 @@
                             <th>WhatsApp</th>
                             <th>Correo</th>
                             <th>Dirección</th>
+                            <th>Ver en Mapa</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,6 +65,9 @@
                                 <td>@contacto.Whatsapp</td>
                                 <td>@contacto.Correo</td>
                                 <td>@contacto.Direccion</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="mostrarEnMapa(@contacto.Latitude, @contacto.Longitude, '@contacto.Provincia')">Ver en el Mapa</button>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -69,8 +77,49 @@
     </div>
 </div>
 
+<div id="map" style="height: 500px; width: 100%;"></div>
+
 <!-- Enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Enlace al archivo JavaScript personalizado -->
-<script src="script.js"></script>
+<!-- Enlace a Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLeDyPQW6nA0OjvtWEze879Uwpc8q6wWM"></script>
+
+<script>
+    var map;
+    var marker;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 9.748917, lng: -83.753428 }, // Ubicación inicial
+            zoom: 8
+        });
+    }
+
+    function mostrarEnMapa(lat, lng, nombre) {
+        var location = { lat: lat, lng: lng };
+        if (marker) {
+            marker.setMap(null);
+        }
+        marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: nombre
+        });
+
+        map.setCenter(location);
+        map.setZoom(15);
+
+        var infowindow = new google.maps.InfoWindow({
+            content: nombre
+        });
+
+        marker.addListener('click', function () {
+            infowindow.open(map, marker);
+        });
+    }
+
+    $(document).ready(function () {
+        initMap();
+    });
+</script>

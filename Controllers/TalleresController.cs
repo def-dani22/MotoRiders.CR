@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Web.Mvc;
 
-
 namespace MotoRiders.CR.Controllers
 {
-
     public class TalleresController : Controller
     {
         private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
 
-        // GET: Repuestos
+        // GET: Talleres
         public ActionResult Index()
         {
             List<Talleres> talleres = new List<Talleres>();
@@ -35,6 +33,8 @@ namespace MotoRiders.CR.Controllers
                             taller.Ubicacion = reader["ubicacion"].ToString();
                             taller.Horarios = reader["horarios"].ToString();
                             taller.Telefono = reader["telefono"].ToString();
+                            taller.Latitude = reader["latitude"] != DBNull.Value ? Convert.ToSingle(reader["latitude"]) : 0;
+                            taller.Longitude = reader["longitude"] != DBNull.Value ? Convert.ToSingle(reader["longitude"]) : 0;
                             talleres.Add(taller);
                         }
                     }

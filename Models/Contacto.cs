@@ -28,5 +28,10 @@ namespace MotoRiders.CR.Models
         [Required]
         [MaxLength(255)]
         public string Direccion { get; set; }
+
+
+        public float Latitude { get; set; }
+
+        public float Longitude { get; set; }
     }
 }

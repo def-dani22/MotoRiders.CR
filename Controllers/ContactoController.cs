@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Web.Mvc;
 
-
 namespace MotoRiders.CR.Controllers
 {
     public class ContactoController : Controller
@@ -35,6 +34,8 @@ namespace MotoRiders.CR.Controllers
                             contacto.Whatsapp = reader["whatsapp"].ToString();
                             contacto.Correo = reader["correo"].ToString();
                             contacto.Direccion = reader["direccion"].ToString();
+                            contacto.Latitude = reader["latitude"] != DBNull.Value ? Convert.ToSingle(reader["latitude"]) : 0;
+                            contacto.Longitude = reader["longitude"] != DBNull.Value ? Convert.ToSingle(reader["longitude"]) : 0;
                             contactos.Add(contacto);
                         }
                     }

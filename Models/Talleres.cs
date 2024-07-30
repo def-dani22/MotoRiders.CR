@@ -21,5 +21,9 @@ namespace MotoRiders.CR.Models
 
         [MaxLength(20)] // Define la longitud máxima para el campo Telefono en la base de datos
         public string Telefono { get; set; }
+
+        public float Latitude { get; set; }
+
+        public float Longitude { get; set; }
     }
 }

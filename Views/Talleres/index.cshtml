@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Listado de Talleres";
 }
+
 <div class="container">
     <h2>Talleres</h2>
     <div class="table-responsive">
@@ -14,6 +15,7 @@
                     <th>Ubicación</th>
                     <th>Horarios</th>
                     <th>Teléfono</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +27,9 @@
                         <td>@taller.Ubicacion</td>
                         <td>@taller.Horarios</td>
                         <td>@taller.Telefono</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="mostrarEnMapa(@taller.Latitude, @taller.Longitude, '@taller.Nombre')">Ver en el Mapa</button>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -32,8 +37,47 @@
     </div>
 </div>
 
-<!-- Agregar enlaces a Bootstrap JS y Popper.js (requeridos para algunos componentes de Bootstrap) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Enlace al archivo JavaScript personalizado -->
-<script src="script.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLeDyPQW6nA0OjvtWEze879Uwpc8q6wWM"></script>
+
+<script>
+    var map;
+    var marker;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 9.748917, lng: -83.753428 },
+            zoom: 8
+        });
+    }
+
+    function mostrarEnMapa(lat, lng, nombre) {
+        var location = { lat: lat, lng: lng };
+        if (marker) {
+            marker.setMap(null);
+        }
+        marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: nombre
+        });
+
+        map.setCenter(location);
+        map.setZoom(15);
+
+        var infowindow = new google.maps.InfoWindow({
+            content: nombre
+        });
+
+        marker.addListener('click', function () {
+            infowindow.open(map, marker);
+        });
+    }
+
+    $(document).ready(function () {
+        initMap();
+    });
+</script>
