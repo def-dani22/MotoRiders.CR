@@ -7,9 +7,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+
 
 namespace MotoRiders.CR.Controllers
 {
@@ -142,20 +147,7 @@ namespace MotoRiders.CR.Controllers
                     EnviarCorreoVerificacion(cliente.email, token);
 
                     // Guardar los datos del cliente temporalmente en TempData
-                    TempData["Cedula"] = cliente.cedula;
-                    TempData["Nombre"] = cliente.nombre;
-                    TempData["Direccion"] = cliente.direccion;
-                    TempData["Telefono"] = cliente.telefono;
-                    TempData["Email"] = cliente.email;
-                    TempData["Contraseña"] = cliente.contraseña;
-                    TempData["PreguntaSeguridad1"] = cliente.preguntaSeguridad1;
-                    TempData["RespuestaSeguridad1"] = cliente.respuestaSeguridad1;
-                    TempData["PreguntaSeguridad2"] = cliente.preguntaSeguridad2;
-                    TempData["RespuestaSeguridad2"] = cliente.respuestaSeguridad2;
-                    TempData["IdPais"] = cliente.IdPais;
-                    TempData["IdProvincia"] = cliente.idProvincia;
-                    TempData["IdCanton"] = cliente.idCanton;
-                    TempData["IdDistrito"] = cliente.idDistrito;
+                    TempData["Cliente"] = cliente;
                     TempData["TokenVerificacion"] = encryptedToken;
 
                     // Redirigir a la vista de verificación de correo
@@ -171,6 +163,55 @@ namespace MotoRiders.CR.Controllers
             return View(cliente);
         }
 
+        [HttpPost]
+        public ActionResult VerificarCorreo(string token)
+        {
+            if (TempData["TokenVerificacion"] == null)
+            {
+                return RedirectToAction("Registro");
+            }
+
+            string encryptedToken = TempData["TokenVerificacion"].ToString();
+
+            if (token.Equals(EncryptionHelper.Decrypt(encryptedToken), StringComparison.OrdinalIgnoreCase))
+            {
+                // Token correcto, registrar el cliente
+                try
+                {
+                    ClienteModel clienteTemporal = TempData["Cliente"] as ClienteModel;
+                    if (clienteTemporal != null)
+                    {
+                        string apiUrl = "http://localhost:5000/insertar_cliente";
+
+                        using (var client = new HttpClient())
+                        {
+                            var content = new StringContent(JsonConvert.SerializeObject(clienteTemporal), Encoding.UTF8, "application/json");
+                            var response = client.PostAsync(apiUrl, content).Result;
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                TempData["Message"] = "Registro exitoso. Ahora puede iniciar sesión.";
+                                return RedirectToAction("Confirmacion");
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("", "Ocurrió un error al registrar el cliente: " + response.ReasonPhrase);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Ocurrió un error al registrar el cliente: " + ex.Message);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "El token de verificación es incorrecto.");
+            }
+
+            return View();
+        }
 
 
 
@@ -202,11 +243,12 @@ namespace MotoRiders.CR.Controllers
         private void InsertarCliente(ClienteModel cliente)
         {
             string query = @"
-        INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2, idPais, idProvincia, idCanton, idDistrito) 
-        VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2, @IdPais, @IdProvincia, @IdCanton, @IdDistrito);
+        INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) 
+        VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2);
         SELECT SCOPE_IDENTITY();
     ";
-
+            //, idPais, idProvincia, idCanton, idDistrito
+            //, @IdPais, @IdProvincia, @IdCanton, @IdDistrito
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -224,10 +266,10 @@ namespace MotoRiders.CR.Controllers
                         command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
                         command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
                         command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
-                        command.Parameters.AddWithValue("@IdPais", cliente.IdPais);
-                        command.Parameters.AddWithValue("@IdProvincia", cliente.idProvincia);
-                        command.Parameters.AddWithValue("@IdCanton", cliente.idCanton);
-                        command.Parameters.AddWithValue("@IdDistrito", cliente.idDistrito);
+                        //command.Parameters.AddWithValue("@IdPais", cliente.IdPais);
+                        //command.Parameters.AddWithValue("@IdProvincia", cliente.idProvincia);
+                        //command.Parameters.AddWithValue("@IdCanton", cliente.idCanton);
+                        //command.Parameters.AddWithValue("@IdDistrito", cliente.idDistrito);
 
                         // Ejecutar la inserción y obtener el ID del cliente
                         int idCliente = Convert.ToInt32(command.ExecuteScalar());
@@ -296,58 +338,6 @@ namespace MotoRiders.CR.Controllers
 
 
 
-        [HttpPost]
-        public ActionResult VerificarCorreo(string token)
-        {
-            if (TempData["TokenVerificacion"] == null)
-            {
-                return RedirectToAction("Registro");
-            }
-
-            string encryptedToken = TempData["TokenVerificacion"].ToString();
-
-            if (token.Equals(EncryptionHelper.Decrypt(encryptedToken), StringComparison.OrdinalIgnoreCase))
-            {
-                // Token correcto, registrar el cliente
-                try
-                {
-                    ClienteModel clienteTemporal = new ClienteModel
-                    {
-                        cedula = TempData["Cedula"]?.ToString(),
-                        nombre = TempData["Nombre"]?.ToString(),
-                        direccion = TempData["Direccion"]?.ToString(),
-                        telefono = TempData["Telefono"]?.ToString(),
-                        email = TempData["Email"]?.ToString(),
-                        contraseña = EncryptionHelper.Encrypt(TempData["Contraseña"]?.ToString()),
-                        preguntaSeguridad1 = TempData["PreguntaSeguridad1"]?.ToString(),
-                        respuestaSeguridad1 = TempData["RespuestaSeguridad1"]?.ToString(),
-                        preguntaSeguridad2 = TempData["PreguntaSeguridad2"]?.ToString(),
-                        respuestaSeguridad2 = TempData["RespuestaSeguridad2"]?.ToString(),
-                        IdPais = Convert.ToInt32(TempData["IdPais"]),
-                        idProvincia = Convert.ToInt32(TempData["IdProvincia"]),
-                        idCanton = Convert.ToInt32(TempData["IdCanton"]),
-                        idDistrito = Convert.ToInt32(TempData["IdDistrito"])
-                    };
-
-                    InsertarCliente(clienteTemporal);
-                    TempData["Message"] = "Registro exitoso. Ahora puede iniciar sesión.";
-                    //return RedirectToAction("InicioSesion", "Cuenta");
-                    return RedirectToAction("Confirmacion");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Ocurrió un error al registrar el cliente: " + ex.Message);
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("", "El token de verificación es incorrecto.");
-            }
-
-            return View();
-        }
-
-
 
         public ActionResult Confirmacion()
         {
@@ -388,6 +378,132 @@ namespace MotoRiders.CR.Controllers
                 throw new Exception("Error al enviar el correo de verificación.", ex);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Controlador del recuperar contraseña.  
+        public static class EncryptionHelper
+        {
+            private static readonly byte[] Key = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
+            private static readonly byte[] IV = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
+
+            public static string Encrypt(string plainText)
+            {
+                byte[] encryptedBytes;
+
+                using (Aes aesAlg = Aes.Create())
+                {
+                    aesAlg.Key = Key;
+                    aesAlg.IV = IV;
+
+                    aesAlg.Mode = CipherMode.CBC;
+                    aesAlg.Padding = PaddingMode.PKCS7;
+
+                    ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                    using (MemoryStream msEncrypt = new MemoryStream())
+                    {
+                        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                        {
+                            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                            {
+                                swEncrypt.Write(plainText);
+                            }
+                            encryptedBytes = msEncrypt.ToArray();
+                        }
+                    }
+                }
+
+                return Convert.ToBase64String(encryptedBytes);
+            }
+
+            public static string Decrypt(string cipherText)
+            {
+                byte[] cipherBytes = Convert.FromBase64String(cipherText);
+
+                using (Aes aesAlg = Aes.Create())
+                {
+                    aesAlg.Key = Key;
+                    aesAlg.IV = IV;
+                    aesAlg.Mode = CipherMode.CBC;
+                    aesAlg.Padding = PaddingMode.PKCS7;
+
+                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                    using (MemoryStream msDecrypt = new MemoryStream(cipherBytes))
+                    {
+                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        {
+                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                return srDecrypt.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
+        private string EncryptPassword(string password)
+        {
+            // Utiliza EncryptionHelper para cifrar la contraseña
+            return EncryptionHelper.Encrypt(password);
+        }
+
+        public static class AuditoriaHelper
+        {
+            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+
+            public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
+            {
+                string query = @"
+            INSERT INTO Auditoria (Usuario, Accion, Detalles, FechaHora, IPAddress) 
+            VALUES (@Usuario, @Accion, @Detalles, @FechaHora, @IPAddress)";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Usuario", usuario);
+                        command.Parameters.AddWithValue("@Accion", accion);
+                        command.Parameters.AddWithValue("@Detalles", detalles ?? (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@FechaHora", DateTime.Now);
+                        command.Parameters.AddWithValue("@IPAddress", ipAddress ?? (object)DBNull.Value);
+
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -992,72 +1108,6 @@ namespace MotoRiders.CR.Controllers
 
 
 
-
-
-        //Controlador del recuperar contraseña.  
-        public static class EncryptionHelper
-        {
-            private static readonly byte[] Key = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
-            private static readonly byte[] IV = { 0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF, 0xFE, 0xDC, 0xBA, 0x98, 0x76, 0x54, 0x32, 0x10 };
-
-            public static string Encrypt(string plainText)
-            {
-                byte[] encryptedBytes;
-
-                using (Aes aesAlg = Aes.Create())
-                {
-                    aesAlg.Key = Key;
-                    aesAlg.IV = IV;
-
-                    aesAlg.Mode = CipherMode.CBC;
-                    aesAlg.Padding = PaddingMode.PKCS7;
-
-                    ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                    using (MemoryStream msEncrypt = new MemoryStream())
-                    {
-                        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                        {
-                            using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                            {
-                                swEncrypt.Write(plainText);
-                            }
-                            encryptedBytes = msEncrypt.ToArray();
-                        }
-                    }
-                }
-
-                return Convert.ToBase64String(encryptedBytes);
-            }
-
-            public static string Decrypt(string cipherText)
-            {
-                byte[] cipherBytes = Convert.FromBase64String(cipherText);
-
-                using (Aes aesAlg = Aes.Create())
-                {
-                    aesAlg.Key = Key;
-                    aesAlg.IV = IV;
-                    aesAlg.Mode = CipherMode.CBC;
-                    aesAlg.Padding = PaddingMode.PKCS7;
-
-                    ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                    using (MemoryStream msDecrypt = new MemoryStream(cipherBytes))
-                    {
-                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                        {
-                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                            {
-                                return srDecrypt.ReadToEnd();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
         public class TokenGenerator
         {
             public static string GenerateToken(int length)
@@ -1457,37 +1507,5 @@ namespace MotoRiders.CR.Controllers
         }
 
 
-        private string EncryptPassword(string password)
-        {
-            // Utiliza EncryptionHelper para cifrar la contraseña
-            return EncryptionHelper.Encrypt(password);
-        }
-
-        public static class AuditoriaHelper
-        {
-            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
-
-            public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
-            {
-                string query = @"
-            INSERT INTO Auditoria (Usuario, Accion, Detalles, FechaHora, IPAddress) 
-            VALUES (@Usuario, @Accion, @Detalles, @FechaHora, @IPAddress)";
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@Usuario", usuario);
-                        command.Parameters.AddWithValue("@Accion", accion);
-                        command.Parameters.AddWithValue("@Detalles", detalles ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@FechaHora", DateTime.Now);
-                        command.Parameters.AddWithValue("@IPAddress", ipAddress ?? (object)DBNull.Value);
-
-                        connection.Open();
-                        command.ExecuteNonQuery();
-                    }
-                }
-            }
-        }
     }
 }
