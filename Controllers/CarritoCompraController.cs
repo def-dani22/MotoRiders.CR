@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace MotoRiders.CR.Controllers
 {
@@ -120,16 +124,16 @@ namespace MotoRiders.CR.Controllers
         }
 
         [HttpPost]
-        public ActionResult RealizarCompra(CarritoCompra carritoCompra)
+        public async Task<ActionResult> RealizarCompra(CarritoCompra carritoCompra)
         {
             var clienteId = ObtenerIdClienteDesdeSesion();
 
-            // Validar los datos de la tarjeta
-            bool tarjetaValida = ValidarDatosTarjeta(carritoCompra);
+            // Validar los datos de la tarjeta con la API de Python
+            bool tarjetaValida = await ValidarDatosTarjetaConAPI(carritoCompra);
 
             if (!tarjetaValida)
             {
-                ModelState.AddModelError("", "Los datos de la tarjeta no son válidos.");
+                ModelState.AddModelError("", "Los datos de la tarjeta no son válidos o el saldo es insuficiente.");
                 return RedirectToAction("Index");
             }
 
@@ -149,11 +153,34 @@ namespace MotoRiders.CR.Controllers
             // Eliminar los productos del carrito después de realizar la compra
             EliminarProductosDelCarrito(clienteId);
 
-
-
             TempData["SuccessMessage"] = "Su Compra se ha realizado con éxito. Pronto le llegara un correo con más información de la compra.";
 
             return RedirectToAction("Confirmacion");
+        }
+
+        private async Task<bool> ValidarDatosTarjetaConAPI(CarritoCompra carritoCompra)
+        {
+            var apiUrl = "http://localhost:5000/validar_tarjeta"; // URL de la API de Python
+            using (var client = new HttpClient())
+            {
+                var requestBody = new
+                {
+                    numeroTarjeta = carritoCompra.NumeroTarjeta,
+                    cvv = carritoCompra.CVV,
+                    nombreTarjeta = carritoCompra.NombreTarjeta,
+                    fechaExpiracion = carritoCompra.FechaExpiracion,
+                    numeroCuenta = carritoCompra.NumeroCuenta,
+                    monto = carritoCompra.Total // Asumiendo que tienes un campo Total en CarritoCompra
+                };
+
+                var response = await client.PostAsync(apiUrl,
+                    new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json"));
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                dynamic result = JsonConvert.DeserializeObject(jsonResponse);
+
+                return result.valido;
+            }
         }
 
 

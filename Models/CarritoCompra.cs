@@ -35,5 +35,11 @@ namespace MotoRiders.CR.Models
         [Required(ErrorMessage = "El número de cuenta es obligatorio.")]
         [StringLength(50, ErrorMessage = "El número de cuenta no puede tener más de 50 caracteres.")]
         public string NumeroCuenta { get; set; }
+
+
+        public double Total { get; set; }
+
+
     }
+
 }
