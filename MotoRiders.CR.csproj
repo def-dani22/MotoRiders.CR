@@ -231,6 +231,7 @@
     <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\Cotizacion.cs" />
     <Compile Include="Models\CotizacionViewModel.cs" />
+    <Compile Include="Models\PersonaModel.cs" />
     <Compile Include="Models\Producto.cs" />
     <Compile Include="Models\ProductoCarrito.cs" />
     <Compile Include="Models\PruebaManejo.cs" />

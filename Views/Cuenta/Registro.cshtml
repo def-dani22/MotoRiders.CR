@@ -20,6 +20,8 @@
     <link href="~/Content/Imagenes/ima.png" rel="icon">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 </head>
 <body>
@@ -578,3 +580,33 @@
             color: #fff;
         }
 </style>
+
+
+
+<script>
+        $(document).ready(function() {
+            $('#cedula').on('blur', function() {
+                var cedula = $(this).val();
+                if (cedula) {
+                    $.ajax({
+                        url: '@Url.Action("ConsultarPersona", "Cuenta")',
+                        type: 'GET',
+                        data: { cedula: cedula },
+                        success: function(data) {
+                            if (data.message) {
+                                alert(data.message);
+                            } else {
+                                $('#nombre').val(data.Nombre);
+                                $('#direccion').val(data.Direccion);
+                                $('#telefono').val(data.Telefono);
+                                $('#email').val(data.Email);
+                            }
+                        },
+                        error: function() {
+                            alert('Error al consultar los datos.');
+                        }
+                    });
+                }
+            });
+        });
+</script>
