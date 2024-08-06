@@ -123,7 +123,6 @@ namespace MotoRiders.CR.Controllers
             return View();
         }
 
-        [HttpPost]
         public async Task<ActionResult> RealizarCompra(CarritoCompra carritoCompra)
         {
             var clienteId = ObtenerIdClienteDesdeSesion();
@@ -153,7 +152,7 @@ namespace MotoRiders.CR.Controllers
             // Eliminar los productos del carrito después de realizar la compra
             EliminarProductosDelCarrito(clienteId);
 
-            TempData["SuccessMessage"] = "Su Compra se ha realizado con éxito. Pronto le llegara un correo con más información de la compra.";
+            TempData["SuccessMessage"] = "Su Compra se ha realizado con éxito. Pronto le llegará un correo con más información de la compra.";
 
             return RedirectToAction("Confirmacion");
         }
@@ -183,24 +182,36 @@ namespace MotoRiders.CR.Controllers
             }
         }
 
-
-        // Método para procesar el pago y realizar las acciones necesarias
         private void ProcesarPago(int idOrden, CarritoCompra carritoCompra)
         {
-            // Validar los datos de la tarjeta con los datos existentes en la base de datos
-            if (ValidarDatosTarjeta(carritoCompra))
-            {
-                // Actualizar el estado de la orden a "pagado"
-                ActualizarEstadoOrden(idOrden, "pagado");
+            // Actualizar el estado de la orden a "pagado"
+            ActualizarEstadoOrden(idOrden, "pagado");
 
-                // Guardar los datos de la compra en la tabla de registro de compras
-                GuardarRegistroCompra(idOrden, carritoCompra.ClienteId);
-            }
-            else
-            {
-                throw new Exception("Los datos de la tarjeta no son válidos.");
-            }
+            // Guardar los datos de la compra en la tabla de registro de compras
+            GuardarRegistroCompra(idOrden, carritoCompra.ClienteId);
         }
+
+  
+
+
+
+        //// Método para procesar el pago y realizar las acciones necesarias
+        //private void ProcesarPago(int idOrden, CarritoCompra carritoCompra)
+        //{
+        //    // Validar los datos de la tarjeta con los datos existentes en la base de datos
+        //    if (ValidarDatosTarjeta(carritoCompra))
+        //    {
+        //        // Actualizar el estado de la orden a "pagado"
+        //        ActualizarEstadoOrden(idOrden, "pagado");
+
+        //        // Guardar los datos de la compra en la tabla de registro de compras
+        //        GuardarRegistroCompra(idOrden, carritoCompra.ClienteId);
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("Los datos de la tarjeta no son válidos.");
+        //    }
+        //}
 
         // Método para validar los datos de la tarjeta con los datos existentes en la base de datos
         private bool ValidarDatosTarjeta(CarritoCompra carritoCompra)
@@ -228,7 +239,10 @@ namespace MotoRiders.CR.Controllers
                     return count > 0;
                 }
             }
-        }// Método para guardar los datos de la compra en una tabla de registro
+        }
+        
+        
+        // Método para guardar los datos de la compra en una tabla de registro
         private void GuardarRegistroCompra(int idOrden, int clienteId)
         {
             string insertQuery = "INSERT INTO RegistroCompras (idOrden, idCliente, fechaCompra) " +
