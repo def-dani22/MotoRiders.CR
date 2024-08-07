@@ -42,6 +42,14 @@ namespace MotoRiders.CR.Controllers
         }
 
 
+
+
+
+
+
+
+
+
         [HttpGet]
         public JsonResult ObtenerProvincias(int idPais)
         {
@@ -177,10 +185,10 @@ namespace MotoRiders.CR.Controllers
                     TempData["RespuestaSeguridad1"] = cliente.respuestaSeguridad1;
                     TempData["PreguntaSeguridad2"] = cliente.preguntaSeguridad2;
                     TempData["RespuestaSeguridad2"] = cliente.respuestaSeguridad2;
-                    //TempData["IdPais"] = cliente.IdPais;
-                    //TempData["IdProvincia"] = cliente.idProvincia;
-                    //TempData["IdCanton"] = cliente.idCanton;
-                    //TempData["IdDistrito"] = cliente.idDistrito;
+                    TempData["IdPais"] = cliente.IdPais;
+                    TempData["IdProvincia"] = cliente.idProvincia;
+                    TempData["IdCanton"] = cliente.idCanton;
+                    TempData["IdDistrito"] = cliente.idDistrito;
                     TempData["TokenVerificacion"] = encryptedToken;
 
                     // Redirigir a la vista de verificación de correo
@@ -227,8 +235,8 @@ namespace MotoRiders.CR.Controllers
         private void InsertarCliente(ClienteModel cliente)
         {
             string query = @"
-        INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2) 
-        VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2);
+        INSERT INTO Clientes (cedula, nombre, direccion, telefono, email, contraseña, preguntaSeguridad1, respuestaSeguridad1, preguntaSeguridad2, respuestaSeguridad2, idPais, idProvincia, idCanton, idDistrito) 
+        VALUES (@Cedula, @Nombre, @Direccion, @Telefono, @Email, @Contraseña, @PreguntaSeguridad1, @RespuestaSeguridad1, @PreguntaSeguridad2, @RespuestaSeguridad2, @IdPais, @IdProvincia, @IdCanton, @IdDistrito);
         SELECT SCOPE_IDENTITY();
     ";
 
@@ -248,11 +256,11 @@ namespace MotoRiders.CR.Controllers
                         command.Parameters.AddWithValue("@PreguntaSeguridad1", cliente.preguntaSeguridad1);
                         command.Parameters.AddWithValue("@RespuestaSeguridad1", cliente.respuestaSeguridad1);
                         command.Parameters.AddWithValue("@PreguntaSeguridad2", cliente.preguntaSeguridad2);
-                        //command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
-                        //command.Parameters.AddWithValue("@IdPais", cliente.IdPais);
-                        //command.Parameters.AddWithValue("@IdProvincia", cliente.idProvincia);
-                        //command.Parameters.AddWithValue("@IdCanton", cliente.idCanton);
-                        //command.Parameters.AddWithValue("@IdDistrito", cliente.idDistrito);
+                        command.Parameters.AddWithValue("@RespuestaSeguridad2", cliente.respuestaSeguridad2);
+                        command.Parameters.AddWithValue("@IdPais", cliente.IdPais);
+                        command.Parameters.AddWithValue("@IdProvincia", cliente.idProvincia);
+                        command.Parameters.AddWithValue("@IdCanton", cliente.idCanton);
+                        command.Parameters.AddWithValue("@IdDistrito", cliente.idDistrito);
 
                         // Ejecutar la inserción y obtener el ID del cliente
                         int idCliente = Convert.ToInt32(command.ExecuteScalar());
@@ -348,10 +356,10 @@ namespace MotoRiders.CR.Controllers
                         respuestaSeguridad1 = TempData["RespuestaSeguridad1"]?.ToString(),
                         preguntaSeguridad2 = TempData["PreguntaSeguridad2"]?.ToString(),
                         respuestaSeguridad2 = TempData["RespuestaSeguridad2"]?.ToString(),
-                        //IdPais = Convert.ToInt32(TempData["IdPais"]),
-                        //idProvincia = Convert.ToInt32(TempData["IdProvincia"]),
-                        //idCanton = Convert.ToInt32(TempData["IdCanton"]),
-                        //idDistrito = Convert.ToInt32(TempData["IdDistrito"])
+                        IdPais = Convert.ToInt32(TempData["IdPais"]),
+                        idProvincia = Convert.ToInt32(TempData["IdProvincia"]),
+                        idCanton = Convert.ToInt32(TempData["IdCanton"]),
+                        idDistrito = Convert.ToInt32(TempData["IdDistrito"])
                     };
 
                     InsertarCliente(clienteTemporal);

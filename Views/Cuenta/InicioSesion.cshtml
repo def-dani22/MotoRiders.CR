@@ -33,13 +33,71 @@
         </div>
     </nav>
 
+    <style>
+
+
+        .unique-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, transform 0.3s ease;
+            border: 2px solid transparent; /* Optional for border effect */
+        }
+
+            .unique-btn:hover {
+                background: linear-gradient(135deg, #feb47b, #ff7e5f);
+                transform: translateY(-4px);
+                border: 2px solid #fff; /* Optional for border effect */
+            }
+
+            .unique-btn:active {
+                background: linear-gradient(135deg, #ff7e5f, #feb47b);
+                transform: translateY(0);
+            }
+    </style>
+    <style>
+
+
+        .btn-primary {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+
+            .btn-primary:active {
+                background-color: #004085;
+                transform: translateY(0);
+            }
+    </style>
+    <p>
+        <a href="@Url.Action("Index", "IndicadoresEconomicosBCCR")" class="unique-btn">Ver Tipo de Cambio</a>
+    </p>
     <div class="container containerL">
         <div class="row">
             <div class="col-md-6 offset-md-3 form-containerL">
+
                 <h2 class="text-center">Inicio de Sesión</h2>
-                <p>
-                    <a href="@Url.Action("Index", "IndicadoresEconomicosBCCR")" class="btn btn-primary">Ver Tipo de Cambio</a>
-                </p>
+
                 @using (Html.BeginForm("InicioSesion", "Cuenta", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
                 {
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })

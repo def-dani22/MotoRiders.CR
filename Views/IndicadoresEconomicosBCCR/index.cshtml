@@ -39,34 +39,62 @@
     <head>
         <title>Indicadores Económicos</title>
         <style>
+
             table {
-                width: 100%;
+                width: 60%;
                 border-collapse: collapse;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                transform: scale(0.98);
+                transition: transform 0.3s ease;
             }
 
-            th, td {
-                border: 1px solid black;
-                padding: 8px;
+                table:hover {
+                    transform: scale(1);
+                }
+
+            thead {
+                background: linear-gradient(135deg, #1e90ff, #00bfff);
+                color: #fff;
                 text-align: left;
             }
 
-            th {
-                background-color: #f2f2f2;
+                thead th {
+                    padding: 12px 16px;
+                    font-size: 1.1em;
+                }
+
+            tbody {
+                background-color: #f9f9f9;
             }
 
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }
+                tbody tr {
+                    transition: background-color 0.3s ease, transform 0.3s ease;
+                }
 
-            .container {
-                max-width: 800px;
-                margin: auto;
-            }
+                    tbody tr:nth-child(odd) {
+                        background-color: #ffffff;
+                    }
 
-            .error {
-                color: red;
-                font-weight: bold;
+                    tbody tr:nth-child(even) {
+                        background-color: #f1f1f1;
+                    }
+
+                    tbody tr:hover {
+                        background-color: #e0f7fa;
+                        transform: translateX(5px);
+                    }
+
+                tbody td {
+                    padding: 12px 16px;
+                    text-align: right;
+                    font-size: 1.1em;
+                }
+
+            table {
+                animation: fadeIn 1s ease-in;
             }
         </style>
     </head>
@@ -82,10 +110,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Valor</th>
+                            <th>Cambio del Dólar</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Aquí va el contenido generado por el backend -->
                         @foreach (var item in Model)
                         {
                             <tr>
@@ -94,7 +123,6 @@
                         }
                     </tbody>
                 </table>
-
                 <div>
                     @Html.ActionLink("Volver al inicio de sesión", "InicioSesion", "Cuenta", new { }, new { @class = "btn btn-primary btn-custom" })
                 </div>
@@ -112,7 +140,31 @@
 </html>
 
 
+<style>
+    .btn-custom {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        background-color: #007bff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
 
+        .btn-custom:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-custom:active {
+            background-color: #004085;
+            transform: translateY(0);
+        }
+</style>
 
 
 <!-- Footer -->
