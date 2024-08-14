@@ -24,7 +24,8 @@ namespace MotoRiders.CR.Controllers
         [HttpGet]
         public JsonResult ConsultarPersona(string cedula)
         {
-            string apiUrl = "http://localhost:5001/consultar_persona?cedula=" + cedula;
+            //string apiUrl = "http://localhost:5001/consultar_persona?cedula=" + cedula;
+            string apiUrl = "https://tiusr10pl.cuc-carrera-ti.ac.cr/ServerPersonas.php?cedula=" + cedula;
 
             using (var client = new HttpClient())
             {
