@@ -17,7 +17,8 @@ namespace MotoRiders.CR.Controllers
 {
     public class CuentaController : Controller
     {
-        private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+        //private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+        private static string connectionString = "Data Source=138.59.135.33\\MSSQLSERVER2019;Initial Catalog=motoridersbd;User ID=motoridersbd;Password=Cmotoridersbd*2024;";
 
         // Método para consultar los datos de una persona por cédula
         [HttpGet]
@@ -1498,7 +1499,8 @@ namespace MotoRiders.CR.Controllers
 
         public static class AuditoriaHelper
         {
-            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+            //private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+            private static string connectionString = "Data Source=138.59.135.33\\MSSQLSERVER2019;Initial Catalog=motoridersbd;User ID=motoridersbd;Password=Cmotoridersbd*2024;";
 
             public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
             {

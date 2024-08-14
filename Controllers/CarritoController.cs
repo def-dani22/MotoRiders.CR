@@ -8,7 +8,8 @@ namespace MotoRiders.Controllers
 {
     public class CarritoController : Controller
     {
-        private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+        //private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+        private static string connectionString = "Data Source=138.59.135.33\\MSSQLSERVER2019;Initial Catalog=motoridersbd;User ID=motoridersbd;Password=Cmotoridersbd*2024;";
 
         // Lista temporal para simular los elementos del carrito (debes reemplazar con tu lógica real)
         private static List<Producto> carrito = new List<Producto>();

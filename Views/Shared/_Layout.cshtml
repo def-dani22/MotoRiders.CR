@@ -14,6 +14,8 @@
     <link href="~/Content/Imagenes/ima.png" rel="icon">
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <link rel="manifest" href="/manifest.json">
+
 
 </head>
 <body>
@@ -99,30 +101,27 @@
                     @*REPORTES*@
 
                     <!--<li class="nav-item">-->
-                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
-                        <!--@Html.ActionLink("Reporte Tokens", "Index", "Reporte", new { area = "" }, new { @class = "btn-link" })
+                    @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                    <!--@Html.ActionLink("Reporte Tokens", "Index", "Reporte", new { area = "" }, new { @class = "btn-link" })
                     </li>
 
                     <li class="nav-item">-->
-                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
-                        <!--@Html.ActionLink("Reporte Compras", "Index", "ReporteCotización", new { area = "" }, new { @class = "btn-link" })
+                    @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                    <!--@Html.ActionLink("Reporte Compras", "Index", "ReporteCotización", new { area = "" }, new { @class = "btn-link" })
                     </li>
 
                     <li class="nav-item">-->
-                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
-                        <!--@Html.ActionLink("Reporte Cotización", "Index", "ReporteCotización", new { area = "" }, new { @class = "btn-link" })
+                    @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                    <!--@Html.ActionLink("Reporte Cotización", "Index", "ReporteCotización", new { area = "" }, new { @class = "btn-link" })
                     </li>
 
                     <li class="nav-item">-->
-                        @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
-                        <!--@Html.ActionLink("Reporte Prueba Manejo", "Index", "ReportePruebaManejo", new { area = "" }, new { @class = "btn-link" })
+                    @*<a href="#" id="contactoBtn" class="btn-link">Contacto</a>*@
+                    <!--@Html.ActionLink("Reporte Prueba Manejo", "Index", "ReportePruebaManejo", new { area = "" }, new { @class = "btn-link" })
                     </li>-->
-
-
-
                     @*<a href="#" id="cotizarBtn" class="btn btn-primary">Cotizar</a>*@
                     <!--@Html.ActionLink("Cotizar", "Nueva", "Prueba", new { }, new { @class = "btn btn-primary", id = "cotizarBtn" })
-                </ul>-->
+                    </ul>-->
             </div>
         </div>
     </nav>
@@ -188,14 +187,14 @@
                     </ul>
                 </div>
                 @*<div class="col-md-4" style="color: white;">
-                    <p>Mantente actualizado de nuestros eventos y promociones. Suscríbete!.</p>
-                    <form>
-                        <div class="form-group">
-                            <input type="email" class="form-control" placeholder="Correo electrónico">
-                        </div>
-                        <button type="submit" class="btn btn-info btn-sm">Suscribirse</button>
-                    </form>
-                </div>*@
+                        <p>Mantente actualizado de nuestros eventos y promociones. Suscríbete!.</p>
+                        <form>
+                            <div class="form-group">
+                                <input type="email" class="form-control" placeholder="Correo electrónico">
+                            </div>
+                            <button type="submit" class="btn btn-info btn-sm">Suscribirse</button>
+                        </form>
+                    </div>*@
             </div>
         </div>
     </footer>
@@ -235,6 +234,22 @@
             </svg>
         </a>
     </div>
+
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('ServiceWorker registrado con éxito:', registration);
+                    })
+                    .catch((error) => {
+                        console.log('Error al registrar el ServiceWorker:', error);
+                    });
+            });
+        }
+    </script>
+
 
 
 </body>

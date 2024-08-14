@@ -191,6 +191,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Content\Styles.css" />
     <Content Include="Global.asax" />
+    <Content Include="service-worker.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +251,7 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <None Include="Connected Services\IndicadoresEconomicos_BCCR\wsindicadoreseconomicos.wsdl" />
+    <Content Include="manifest.json" />
     <None Include="packages.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />

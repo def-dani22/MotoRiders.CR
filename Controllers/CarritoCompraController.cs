@@ -13,7 +13,8 @@ namespace MotoRiders.CR.Controllers
 {
     public class CarritoCompraController : Controller
     {
-        private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+        //private string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+        private static string connectionString = "Data Source=138.59.135.33\\MSSQLSERVER2019;Initial Catalog=motoridersbd;User ID=motoridersbd;Password=Cmotoridersbd*2024;";
 
         // GET: CarritoCompra
         public ActionResult Index()
@@ -511,7 +512,8 @@ namespace MotoRiders.CR.Controllers
 
         public static class AuditoriaHelper
         {
-            private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+            //private static string connectionString = "Data Source=DESKTOP-KNSONQV\\PUBLICADOR;Initial Catalog=motoriders;Integrated Security=True;";
+            private static string connectionString = "Data Source=138.59.135.33\\MSSQLSERVER2019;Initial Catalog=motoridersbd;User ID=motoridersbd;Password=Cmotoridersbd*2024;";
 
             public static void RegistrarAccion(string usuario, string accion, string detalles = null, string ipAddress = null)
             {
