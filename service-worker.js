@@ -3,8 +3,8 @@ const URLsToCache = [
     '/',                        // Página principal (index.html)
     '/Content/Styles.css',       // Hoja de estilo
     '/Content/Script.js',        // Script de JavaScript
-    '/Content/Imagenes/icon-192x192.png',  // Icono 192x192
-    '/Content/Imagenes/icon-512x512.png'   // Icono 512x512
+    '/Content/Imagenes/ima-192x192.png',  // Icono 192x192
+    '/Content/Imagenes/ima-512x512.png'   // Icono 512x512
 ];
 
 self.addEventListener('install', (event) => {

@@ -1,0 +1,136 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Onboarding - MotoRiders</title>
+    <link href="~/Content/Styles.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="onboarding-overlay" style="display: none;">
+        <div class="onboarding">
+            <div class="carousel-container">
+                <div class="slide" id="slide-1">
+                    <p style="color: #007bff;
+          font-size: 28px;
+          text-align: center;
+          font-family: 'Poppins', sans-serif;
+          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+          line-height: 1.5;
+          margin: 20px 0;">
+                        Bienvenido a MotoRiders!
+                    </p>
+
+                    <img src="~/Content/Imagenes/Ob1.PNG" alt="Welcome">
+                    <p style="color: white; font-size: 24px; text-align: center;">
+                        Conoce nuestros puntos de venta y reparacion inmediata.
+                    </p>
+                    <button class="next-slide btn btn-primary">Next</button>
+                    <button class="skip btn btn-secondary">Skip</button>
+                </div>
+                <div class="slide" id="slide-2" style="display:none;">
+                    <p>Sabes como encontrarnos?</p>
+                    <img src="~/Content/Imagenes/Ob2.PNG" alt="Navigation">
+                    <p style="color: white; font-size: 24px; text-align: center;">
+                        Descubre nuestros diferentes productos y personaliza tu carrito de compras.
+                    </p>
+                    <button class="next-slide btn btn-primary">Next</button>
+                    <button class="skip btn btn-secondary">Skip</button>
+                </div>
+                <div class="slide" id="slide-3" style="display:none;">
+                    <h2>Prueba antes de comprar!!</h2>
+                    <img src="~/Content/Imagenes/Ob3.PNG" alt="Ready to Ride">
+                    <p style="color: white; font-size: 24px; text-align: center;">
+                        Solicita una prueba de manejo antes de adquirir nuestras motocicletas
+                    </p>
+                    <button class="finish btn btn-success">Finish</button>
+                    <button class="skip btn btn-secondary">Skip</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #onboarding-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .onboarding {
+            background: powderblue ;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .carousel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .slide img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .slide {
+            display: none;
+        }
+
+            .slide.active {
+                display: block;
+            }
+
+        button {
+            margin-top: 20px;
+            width: 100px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if (localStorage.getItem('onboardingCompleted') !== 'true') {
+                $('#onboarding-overlay').fadeIn();
+
+                var currentSlide = 1;
+                showSlide(currentSlide);
+
+                $('.next-slide').click(function () {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                });
+
+                $('.skip, .finish').click(function () {
+                    localStorage.setItem('onboardingCompleted', 'true');
+                    $('#onboarding-overlay').fadeOut();
+                });
+            }
+
+            function showSlide(slideNumber) {
+                $('.slide').hide();
+                $('#slide-' + slideNumber).show();
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -101,3 +101,27 @@ $(document).ready(function () {
 });
 
 
+
+    $(document).ready(function () {
+        if (localStorage.getItem('onboardingCompleted') !== 'true') {
+        $('#onboarding-overlay').fadeIn();
+
+    var currentSlide = 1;
+    showSlide(currentSlide);
+
+    $('.next-slide').click(function () {
+        currentSlide++;
+    showSlide(currentSlide);
+            });
+
+    $('.skip, .finish').click(function () {
+        localStorage.setItem('onboardingCompleted', 'true');
+    $('#onboarding-overlay').fadeOut();
+            });
+        }
+
+    function showSlide(slideNumber) {
+        $('.slide').hide();
+    $('#slide-' + slideNumber).show();
+        }
+    });
