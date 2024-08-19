@@ -25,7 +25,7 @@
                        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
                        line-height: 1.5;
                        margin: 20px 0;">
-                       Bienvenido a MotoRiders!
+                        Bienvenido a MotoRiders!
                     </p>
 
                     <img src="~/Content/Imagenes/Onboarding1.PNG" alt="Welcome">
@@ -85,14 +85,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden; /* Evita el scroll */
         }
 
         .onboarding {
-            background-color: rgba(255, 255, 255, 0.7); /* Blanco con 50% de transparencia */
+            background-color: rgba(255, 255, 255, 0.9); /* Blanco con 90% de transparencia */
             padding: 20px;
             border-radius: 10px;
             max-width: 500px;
+            max-height: 90vh; /* Limitar la altura máxima */
             text-align: center;
+            overflow-y: auto; /* Agregar scroll solo en el contenido interno si es necesario */
         }
 
         .carousel-container {
