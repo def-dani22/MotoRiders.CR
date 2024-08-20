@@ -152,6 +152,8 @@
     <Content Include="Content\Imagenes\e6.png" />
     <Content Include="Content\Imagenes\e7.png" />
     <Content Include="Content\Imagenes\HONDA.png" />
+    <Content Include="Content\Imagenes\ima-512X512.png" />
+    <Content Include="Content\Imagenes\ima-72x72.png" />
     <Content Include="Content\Imagenes\ima.png" />
     <Content Include="Content\Imagenes\imagc1.png" />
     <Content Include="Content\Imagenes\imagc2.png" />
@@ -310,6 +312,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="images\icons\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
