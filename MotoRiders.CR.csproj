@@ -181,7 +181,7 @@
     <Content Include="Content\Imagenes\motocross.png" />
     <Content Include="Content\Imagenes\Ob2.PNG" />
     <Content Include="Content\Imagenes\Ob3.PNG" />
-    <Content Include="Content\Imagenes\Onboarding1.jpg" />
+    <Content Include="Content\Imagenes\Onboarding1.png" />
     <Content Include="Content\Imagenes\r1.png" />
     <Content Include="Content\Imagenes\r2.png" />
     <Content Include="Content\Imagenes\r3.png" />
@@ -194,6 +194,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Content\Styles.css" />
     <Content Include="Global.asax" />
+    <Content Include="regist_serviceWorker.js" />
     <Content Include="service-worker.js" />
     <Content Include="Web.config" />
   </ItemGroup>
